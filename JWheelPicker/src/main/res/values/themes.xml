@@ -1,0 +1,22 @@
+<resources xmlns:ns1="http://schemas.android.com/tools">
+
+    <style name="JPickerDialogTheme" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:windowAnimationStyle">@style/JPickerDialogWindowAnimation</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarDividerColor" ns1:targetApi="o_mr1">
+            @android:color/transparent
+        </item>
+        <item name="android:enforceNavigationBarContrast" ns1:targetApi="q">false</item>
+        <item name="android:enforceStatusBarContrast" ns1:targetApi="q">false</item>
+
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="JPickerDialogWindowAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+</resources>
