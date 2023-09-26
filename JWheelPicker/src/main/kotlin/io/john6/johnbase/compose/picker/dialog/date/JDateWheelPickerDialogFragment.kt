@@ -1,13 +1,16 @@
-package io.john6.johnbase.compose.picker.dialog.multiple
+package io.john6.johnbase.compose.picker.dialog.date
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -18,6 +21,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import io.john6.johnbase.compose.picker.JDateWheelPicker
 import io.john6.johnbase.compose.picker.JMultiWheelPicker
 import io.john6.johnbase.compose.picker.JWheelPickerInfo
 import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
@@ -28,28 +32,30 @@ import io.john6.johnbase.compose.ui.bottomSafeDrawing
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 
 /**
- * DialogFragment for custom multiple column picker
+ * DialogFragment for custom date picker
  *
  * Example to use
  * ```kotlin
- * JMultiplePickerDialogFragment.show(
- *     parentFragmentManager,
- *     requiredData = JMultiPickerDialogData(
- *         title = 0 to "MultiplePicker",
+ * JDateWheelPickerDialogFragment.show(
+ *     supportFragmentManager,
+ *     requiredData = JDatePickerDialogData(
+ *         title = 0 to "DatePicker",
  *         overlayStyle = JWheelPickerHelper.overlayStyleOvalRectangle,
- *         adapterClass = IMultipleJPickerAdapter.testAdapter::class.java
+ *         containerHorizontalPaddingInDp = 16
  *     ),
  * )
  * ```
  *
- * * onSubmit 结果会以 [FragmentManager.setFragmentResult] 的方式返回，key 为 "result", value 为 [JWheelPickerItemInfo] ParcelableArray
+ * * result will be send by [FragmentManager.setFragmentResult], key is "result", value is [LocalDateTime] after serialized
  *
  */
-class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
-    private lateinit var mViewModel: JMultiplePickerViewModel
+@RequiresApi(Build.VERSION_CODES.O)
+class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
+    private lateinit var mViewModel: JDateWheelPickerViewModel
     private var disableTouch = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +63,7 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
         mViewModel = ViewModelProvider(
             this,
             SavedStateViewModelFactory(null, this, arguments)
-        )[JMultiplePickerViewModel::class.java]
+        )[JDateWheelPickerViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -74,14 +80,13 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
         Column(modifier = Modifier.bottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
-                onSubmit = this@JMultiplePickerDialogFragment::onSubmit
+                onSubmit = this@JDateWheelPickerDialogFragment::onSubmit
             )
 
-            MultiplePicker(
+            DatePicker(
                 modifier = Modifier
                     .fillMaxWidth(),
                 requiredData = mViewModel.requiredData,
-                adapter = mViewModel.mMultipleJPickerAdapter
             )
 
         }
@@ -94,77 +99,52 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
         MainScope().launch {
             dismiss()
             // Wait for wheel picker state to idle
-            try {
-                delay(200)
-            } catch (e: Exception) {
-                Log.d(TAG, "onSubmit: ${e.message}")
-            }
-            Log.d(TAG, "onSubmit: lsdkfjlskdfj")
+            delay(200)
             // In case multiple picker shows in a single fragment, we need to use tag to distinguish
-            val desireTag = this@JMultiplePickerDialogFragment.tag ?: TAG
+            val desireTag = this@JDateWheelPickerDialogFragment.tag ?: TAG
             tempFM.setFragmentResult(desireTag, Bundle().apply {
-                putParcelableArray("result", mViewModel.currentSelectedItemInfo.toTypedArray())
+                putSerializable("result", mViewModel.currentSelectedDateTime)
             })
         }
     }
 
     @Composable
-    fun MultiplePicker(
+    fun DatePicker(
         modifier: Modifier,
-        requiredData: JMultiPickerDialogData,
-        adapter: IMultipleJPickerAdapter
+        requiredData: JDatePickerDialogData,
     ){
-        val selectedIndexes: MutableList<Int> = remember {
-            mutableStateListOf(*adapter.initialIndexes).apply {
-                forEachIndexed { index, initialIndex ->
-                    val generatePickerInfoFunc = adapter.generateJWheelPickerInfo(index, this)
-                    mViewModel.currentSelectedItemInfo[index] = generatePickerInfoFunc.itemData(initialIndex)
-                }
+
+        val onSelectedTimeChanged: (LocalDateTime) -> Unit = remember {
+            {
+                mViewModel.currentSelectedDateTime = it
             }
         }
 
-        val generateJWheelPickerInfo: (wheelIndex: Int) -> JWheelPickerInfo = remember {
-             { wheelIndex ->
-                adapter.generateJWheelPickerInfo(wheelIndex, selectedIndexes)
-            }
-        }
-
-        val onSelectedItemChanged: (pickerInfo:JWheelPickerInfo, itemInfo:JWheelPickerItemInfo) -> Unit = remember {
-            { pickerInfo, itemInfo ->
-                selectedIndexes[pickerInfo.id] = itemInfo.index
-                mViewModel.currentSelectedItemInfo[pickerInfo.id] = itemInfo
-            }
-        }
-
-        val key: (wheelIndex: Int) -> Any = remember {
-            { wheelIndex ->
-                adapter.key(wheelIndex, selectedIndexes)
-            }
-        }
-
-        JMultiWheelPicker(
-            modifier = modifier.disableAllVerticalScroll(disableTouch),
-            wheelCount = adapter.wheelCount,
-            generateJWheelPickerInfo = generateJWheelPickerInfo,
+        JDateWheelPicker(
+            modifier = modifier,
+            datePickerMode = requiredData.datePickerMode,
+            timePickerMode = requiredData.timePickerMode,
+            containerHorizontalPadding = requiredData.containerHorizontalPaddingInDp.dp,
+            startDateInMillis = requiredData.startDateInMillis,
+            initialSelectedDateInMillis = requiredData.initialSelectedDateInMillis,
             drawOverLay = rememberDefaultOverlayStyle(requiredData.overlayStyle),
-            key = key,
-            onSelectedItemChanged = onSelectedItemChanged
+            onSelectedTimeChanged = onSelectedTimeChanged,
         )
     }
 
     companion object {
-        const val TAG = "JMultiplePicker"
+        const val TAG = "JDatePicker"
 
         fun show(
             fragmentManager: FragmentManager,
-            requiredData: JMultiPickerDialogData,
+            requiredData: JDatePickerDialogData,
             tag: String = TAG,
-        ): JMultiplePickerDialogFragment? {
+        ): JDateWheelPickerDialogFragment? {
             if(fragmentManager.findFragmentByTag(tag) != null) {
-                Log.d(TAG, "JMultiplePicker with tag $tag exist")
+                Log.d(TAG, "JDatePicker with tag $tag exist")
                 return null
             }
-            return JMultiplePickerDialogFragment().apply {
+            return JDateWheelPickerDialogFragment().apply {
                 if (arguments == null) {
                     arguments = Bundle()
                 }

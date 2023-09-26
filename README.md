@@ -7,9 +7,11 @@
 </p>
 
 * iOS-style wheel picker supports all Android versions starting from Android lollipop(5.0).
-* For single wheel picker, use [JSinglePickerDialogFragment], a List<JWheelPickerItemInfo> is needed.
-* For multiple wheels picker, use [JMultiplePickerDialogFragment], need to implement your own [IMultipleJPickerAdapter].
-* Or you can create your own picker, using the [JWheelPicker], which is just a normal Compose UI.
+* For single wheel picker, use [JSinglePickerDialogFragment], a [JSinglePickerDialogData] is needed.
+* For multiple wheels picker, use [JMultiplePickerDialogFragment], a [JMultiPickerDialogData] is needed.
+* For date picker, use [JDateWheelPickerDialogFragment], a [JDatePickerDialogData] is needed.
+* Or you can create your own picker by using the [JWheelPicker], [JMultiWheelPicker] and [JDateWheelPicker] which are just normal Compose UI.
+
 
 |||
 | ---- | ---- |
@@ -24,6 +26,12 @@
 
 [LatestVersion]: https://jitpack.io/v/oOJohn6Oo/JWheelPicker.svg
 [JWheelPicker]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/JWheelPicker.kt
+[JMultiWheelPicker]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/JMultiWheelPicker.kt
+[JDateWheelPicker]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/JDateWheelPicker.kt
 [JSinglePickerDialogFragment]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/dialog/single/JSinglePickerDialogFragment.kt
+[JSinglePickerDialogData]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/dialog/single/JSinglePickerDialogData.kt
 [JMultiplePickerDialogFragment]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/dialog/multiple/JMultiplePickerDialogFragment.kt
+[JMultiPickerDialogData]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/dialog/multiple/JMultiPickerDialogData.kt
+[JDateWheelPickerDialogFragment]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/dialog/multiple/JDateWheelPickerDialogFragment.kt
+[JDatePickerDialogData]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/dialog/multiple/JDatePickerDialogData.kt
 [IMultipleJPickerAdapter]: ./JWheelPicker/src/main/kotlin/io/john6/johnbase/compose/picker/dialog/multiple/IMultipleJPickerAdapter.kt
