@@ -1,10 +1,9 @@
 package io.john6.johnbase.compose.picker
 
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,8 +26,6 @@ import kotlin.math.roundToInt
 
 /**
  * 多滚轮选择器
- * @author Liu Qiang
- * @since 2023-03-05
  *
  * @param enableHapticFeedback 是否启用震动
  * @param hapticFeedBackYThreshold  震动范围
@@ -41,6 +38,7 @@ fun JMultiWheelPicker(
     modifier: Modifier = Modifier,
     height: Dp = 240.dp,
     itemVerticalPadding: Dp = 4.dp,
+    containerHorizontalPadding: Dp = 0.dp,
     enableHapticFeedback: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
     hapticFeedBackYThreshold: Float = 20f,
@@ -64,7 +62,9 @@ fun JMultiWheelPicker(
         .drawWithContent {
             drawContent()
             drawOverLay?.invoke(this, itemHeightPx, (size.height - itemHeightPx) / 2f)
-        }, horizontalArrangement = Arrangement.SpaceAround) {
+        }
+        .padding(horizontal = containerHorizontalPadding)
+    ) {
         repeat(wheelCount) { wheelIndex ->
             ItemWheelPicker(
                 height = height,
@@ -101,7 +101,6 @@ private fun RowScope.ItemWheelPicker(
     generatePickerData: (wheelIndex: Int) -> JWheelPickerInfo
 ) {
     val pickerData by remember(generatePickerData, key(wheelIndex)) {
-        Log.d("lq", "generatePickerData $wheelIndex :${generatePickerData(wheelIndex)}")
         mutableStateOf(generatePickerData(wheelIndex))
     }
     JWheelPicker(

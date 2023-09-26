@@ -1,5 +1,7 @@
 package io.john6.johnbase.compose.picker
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -14,7 +16,7 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 import java.io.Serializable
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatterBuilder
 import java.time.format.TextStyle
 import java.time.temporal.ChronoField
@@ -41,11 +43,11 @@ object JWheelPickerHelper:Serializable {
             .toFormatter(Locale.getDefault())
     }
 
-    fun getMonthDisplayText(zonedDateTime: ZonedDateTime, language: String): String {
+    fun getMonthDisplayText(LocalDateTime: LocalDateTime, language: String): String {
         if (!language.equals(defaultMonthFormatter.locale.language, true)) {
             defaultMonthFormatter = defaultMonthFormatter.withLocale(Locale.getDefault())
         }
-        return defaultMonthFormatter.format(zonedDateTime)
+        return defaultMonthFormatter.format(LocalDateTime)
     }
 
     fun getDefaultTimeDisplayText(timeValue:Int):String{
@@ -59,8 +61,8 @@ object JWheelPickerHelper:Serializable {
     fun ContentDrawScope.drawPickerLineOverlay(
         edgeOffsetYPx: Float,
         itemHeightPx: Int,
-        scrimColor: Color = Color.White,
-        lineColor: Color = Color.Gray,
+        scrimColor: Color = Color.White.copy(alpha = 0.7f),
+        lineColor: Color = Color.Gray.copy(alpha = 0.1f),
         lineWidth: Float = 2f,
         horizontalPadding:Float = 0f,
         verticalPadding:Float = 0f,
@@ -79,7 +81,7 @@ object JWheelPickerHelper:Serializable {
             verticalPadding = verticalPadding,
             radius = radius
         )
-        this.drawPath(path, scrimColor, alpha = 0.7f)
+        this.drawPath(path, scrimColor)
         this.drawLine(
             color = lineColor,
             start = Offset(0f, scrimHeight),
@@ -100,11 +102,11 @@ object JWheelPickerHelper:Serializable {
     fun ContentDrawScope.drawPickerRectOverlay(
         edgeOffsetYPx: Float,
         itemHeightPx: Int,
-        scrimColor: Color = Color.White,
-        fillColor: Color = Color.White,
+        scrimColor: Color = Color.White.copy(alpha = 0.7f),
+        fillColor: Color = Color.Gray.copy(alpha = 0.4f),
         horizontalPadding: Float = 0f,
         verticalPadding: Float = 0f,
-        radius: Float = 0f,
+        radius: Float = 12f,
     ) {
         val w = this.size.width
         val h = this.size.height
@@ -143,10 +145,10 @@ object JWheelPickerHelper:Serializable {
             verticalPadding = verticalPadding,
             radius = radius
         )
-        this.drawPath(path, scrimColor, alpha = 0.7f)
+        this.drawPath(path, scrimColor)
 
         this.drawRoundRect(
-            color = fillColor.copy(alpha = 0.4f),
+            color = fillColor,
             topLeft = Offset(x = horizontalPadding, y = scrimHeight),
             size = Size(w - horizontalPadding * 2f, highlightHeight),
             cornerRadius = CornerRadius(radius),
@@ -177,70 +179,6 @@ object JWheelPickerHelper:Serializable {
         return resPath
     }
 
-
-    /**
-     * 默认情况下的滚轮数据文字显示的构建方法
-     */
-    fun getDefaultItemText(
-        wheelIndex: Int,
-        startValue: Int,
-        selectedDateTime: ZonedDateTime,
-        language: String,
-    ): ((Int) -> JWheelPickerItemInfo) {
-        return {
-            JWheelPickerItemInfo(startValue.toString(), it,"item$startValue")
-        }
-//        return when (wheelIndex) {
-//            0 -> {
-//                if (language.equals("zh", ignoreCase = true)) {
-//                    { "${startValue + it}年" }
-//                }else{
-//                    { (startValue + it).toString() }
-//                }
-//            }
-//
-//            1 -> {
-//                // the month-of-year,from 1 to 12
-//                { getMonthDisplayText(selectedDateTime.withMonth(startValue + it), language) }
-//            }
-//
-//            2 -> {
-//                // the day-of-month, from 1 to 31
-//
-//                if (language.equals("zh", ignoreCase = true)) {
-//                    { "${startValue + it}日" }
-//                }else{
-//                    { (startValue + it).toString() }
-//                }
-//            }
-//
-//            3 -> {
-//                //the hour-of-day, from 0 to 23
-//                {
-//                    getDefaultTimeDisplayText(startValue + it)
-//                }
-//            }
-//
-//            4 -> {
-//                //the minute-of-hour, from 0 to 59
-//                {
-//                    getDefaultTimeDisplayText(startValue + it)
-//                }
-//            }
-//
-//            5 -> {
-//                //the second-of-minute, from 0 to 59
-//                {
-//                    getDefaultTimeDisplayText(startValue + it)
-//                }
-//            }
-//
-//            else -> {
-//                { "" }
-//            }
-//        }
-
-    }
 }
 
 class lazyMutable<T>(val initializer: () -> T):ReadWriteProperty<Any?,T> {

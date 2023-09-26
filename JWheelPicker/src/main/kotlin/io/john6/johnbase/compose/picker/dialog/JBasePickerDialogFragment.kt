@@ -160,13 +160,14 @@ open class JBasePickerDialogFragment : DialogFragment() {
             color = MaterialTheme.colors.surface,
             elevationOverlay = LocalElevationOverlay.current,
             absoluteElevation = 1.dp
-        )
+        ).copy(alpha = 0.7f)
 
         val fillColor = jSurfaceColorAtElevation(
             color = MaterialTheme.colors.surface,
             elevationOverlay = JElevationOverlayInBothLightAndDarkMode,
             absoluteElevation = 8.dp
-        )
+        ).copy(alpha = 0.4f)
+
         val lineColor = MaterialTheme.colors.onBackground.copy(alpha = 0.1f)
 
         val horizontalOverlayPadding = with(LocalDensity.current){ (16.dp).toPx() }
