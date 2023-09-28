@@ -96,12 +96,12 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
         if(disableTouch) return
         disableTouch = true
         val tempFM = parentFragmentManager
+        // In case multiple picker shows in a single fragment, we need to use tag to distinguish
+        val desireTag = this@JDateWheelPickerDialogFragment.tag ?: TAG
         MainScope().launch {
             dismiss()
             // Wait for wheel picker state to idle
             delay(200)
-            // In case multiple picker shows in a single fragment, we need to use tag to distinguish
-            val desireTag = this@JDateWheelPickerDialogFragment.tag ?: TAG
             tempFM.setFragmentResult(desireTag, Bundle().apply {
                 putSerializable("result", mViewModel.currentSelectedDateTime)
             })

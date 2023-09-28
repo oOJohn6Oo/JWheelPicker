@@ -91,17 +91,12 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
         if(disableTouch) return
         disableTouch = true
         val tempFM = parentFragmentManager
+        // In case multiple picker shows in a single fragment, we need to use tag to distinguish
+        val desireTag = this@JMultiplePickerDialogFragment.tag ?: TAG
         MainScope().launch {
             dismiss()
             // Wait for wheel picker state to idle
-            try {
-                delay(200)
-            } catch (e: Exception) {
-                Log.d(TAG, "onSubmit: ${e.message}")
-            }
-            Log.d(TAG, "onSubmit: lsdkfjlskdfj")
-            // In case multiple picker shows in a single fragment, we need to use tag to distinguish
-            val desireTag = this@JMultiplePickerDialogFragment.tag ?: TAG
+            delay(200)
             tempFM.setFragmentResult(desireTag, Bundle().apply {
                 putParcelableArray("result", mViewModel.currentSelectedItemInfo.toTypedArray())
             })
