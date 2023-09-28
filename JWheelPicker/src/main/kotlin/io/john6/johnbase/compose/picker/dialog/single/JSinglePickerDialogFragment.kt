@@ -32,6 +32,7 @@ import io.john6.johnbase.compose.picker.JMultiWheelPicker
 import io.john6.johnbase.compose.picker.JWheelPicker
 import io.john6.johnbase.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
 import io.john6.johnbase.compose.picker.JWheelPickerHelper.drawPickerRectOverlay
+import io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.johnbase.compose.picker.JWheelPickerInfo
 import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.johnbase.compose.picker.dialog.JBasePickerDialogFragment
@@ -52,9 +53,7 @@ import io.john6.johnbase.compose.ui.jSurfaceColorAtElevation
  * )
  * ```
  *
- * * onSubmit 结果会以 [FragmentManager.setFragmentResult] 的方式返回，key 为 "result", value 为 [JWheelPickerItemInfo]
- *
- *
+ * * result will be send by  [FragmentManager.setFragmentResult]，key is [io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey], value is [JWheelPickerItemInfo] after parceled
  */
 open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
 
@@ -74,7 +73,7 @@ open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
         // In case multiple picker shows in a single fragment, we need to use tag to distinguish
         val desireTag = this.tag ?: TAG
         parentFragmentManager.setFragmentResult(desireTag, Bundle().apply {
-            putParcelable("result", mViewModel.currentSelectedItemInfo)
+            putParcelable(fragmentResultKey, mViewModel.currentSelectedItemInfo)
         })
         dismiss()
     }

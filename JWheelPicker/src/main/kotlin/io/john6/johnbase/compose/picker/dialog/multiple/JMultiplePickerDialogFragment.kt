@@ -19,6 +19,7 @@ import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import io.john6.johnbase.compose.picker.JMultiWheelPicker
+import io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.johnbase.compose.picker.JWheelPickerInfo
 import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.johnbase.compose.picker.dialog.JBasePickerDialogFragment
@@ -45,7 +46,7 @@ import kotlinx.coroutines.launch
  * )
  * ```
  *
- * * onSubmit 结果会以 [FragmentManager.setFragmentResult] 的方式返回，key 为 "result", value 为 [JWheelPickerItemInfo] ParcelableArray
+ * * result will be send by [FragmentManager.setFragmentResult]，key is [io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey], value is [JWheelPickerItemInfo] after Parceled
  *
  */
 class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
@@ -98,7 +99,7 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
             // Wait for wheel picker state to idle
             delay(200)
             tempFM.setFragmentResult(desireTag, Bundle().apply {
-                putParcelableArray("result", mViewModel.currentSelectedItemInfo.toTypedArray())
+                putParcelableArray(fragmentResultKey, mViewModel.currentSelectedItemInfo.toTypedArray())
             })
         }
     }

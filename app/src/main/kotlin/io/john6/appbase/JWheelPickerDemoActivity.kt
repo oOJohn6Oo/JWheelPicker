@@ -39,6 +39,7 @@ import io.john6.johnbase.compose.JohnAppTheme
 import io.john6.johnbase.compose.picker.DatePickerMode
 import io.john6.johnbase.compose.picker.JDateWheelPicker
 import io.john6.johnbase.compose.picker.JWheelPickerHelper
+import io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.johnbase.compose.picker.TimePickerMode
 import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.johnbase.compose.picker.dialog.date.JDatePickerDialogData
@@ -71,14 +72,14 @@ class JWheelPickerDemoActivity : FragmentActivity() {
             JSinglePickerDialogFragment.TAG,
             this
         ) { _, bundle ->
-            val result = bundle.getParcelableCompat("result", JWheelPickerItemInfo::class.java)
+            val result = bundle.getParcelableCompat(fragmentResultKey, JWheelPickerItemInfo::class.java)
             Toast.makeText(this, result?.id.toString(), Toast.LENGTH_SHORT).show()
         }
         supportFragmentManager.setFragmentResultListener(
             JMultiplePickerDialogFragment.TAG,
             this
         ) { _, bundle ->
-            val result = bundle.getParcelableArrayCompat("result", JWheelPickerItemInfo::class.java)
+            val result = bundle.getParcelableArrayCompat(fragmentResultKey, JWheelPickerItemInfo::class.java)
             Toast.makeText(this, result?.joinToString { it.id }, Toast.LENGTH_SHORT)
                 .show()
         }
@@ -87,7 +88,7 @@ class JWheelPickerDemoActivity : FragmentActivity() {
                 JDateWheelPickerDialogFragment.TAG,
                 this
             ) { _, bundle ->
-                val result = bundle.getSerializableCompat("result", LocalDateTime::class.java)
+                val result = bundle.getSerializableCompat(fragmentResultKey, LocalDateTime::class.java)
                 Toast.makeText(this, result.toString(), Toast.LENGTH_SHORT)
                     .show()
             }

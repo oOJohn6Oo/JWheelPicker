@@ -10,6 +10,9 @@ import java.time.Month
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatterBuilder
+import java.time.format.TextStyle
+import java.time.temporal.ChronoField
 
 /**
  * Container of [JDateWheelPicker]'s helper functions
@@ -298,6 +301,23 @@ object JDatePickerHelper {
 
 //</editor-fold>
 
+    //<editor-fold desc="Formatter related">
+    var defaultMonthFormatter by lazyMutable {
+        DateTimeFormatterBuilder().appendText(ChronoField.MONTH_OF_YEAR, TextStyle.SHORT)
+            .toFormatter(java.util.Locale.getDefault())
+    }
+
+    fun getMonthDisplayText(LocalDateTime: LocalDateTime, language: String): String {
+        if (!language.equals(defaultMonthFormatter.locale.language, true)) {
+            defaultMonthFormatter = defaultMonthFormatter.withLocale(java.util.Locale.getDefault())
+        }
+        return defaultMonthFormatter.format(LocalDateTime)
+    }
+
+    fun getDefaultTimeDisplayText(timeValue:Int):String{
+        return timeValue.toString().padStart(2, '0')
+    }
+
     /**
      * 默认情况下的滚轮数据文字显示的构建方法
      */
@@ -319,7 +339,7 @@ object JDatePickerHelper {
             1 -> {
                 // the month-of-year,from 1 to 12
                 {
-                    JWheelPickerHelper.getMonthDisplayText(
+                    getMonthDisplayText(
                         selectedDateTime.withMonth(startValue + it),
                         language
                     )
@@ -339,21 +359,21 @@ object JDatePickerHelper {
             3 -> {
                 //the hour-of-day, from 0 to 23
                 {
-                    JWheelPickerHelper.getDefaultTimeDisplayText(startValue + it)
+                    getDefaultTimeDisplayText(startValue + it)
                 }
             }
 
             4 -> {
                 //the minute-of-hour, from 0 to 59
                 {
-                    JWheelPickerHelper.getDefaultTimeDisplayText(startValue + it)
+                    getDefaultTimeDisplayText(startValue + it)
                 }
             }
 
             5 -> {
                 //the second-of-minute, from 0 to 59
                 {
-                    JWheelPickerHelper.getDefaultTimeDisplayText(startValue + it)
+                    getDefaultTimeDisplayText(startValue + it)
                 }
             }
 
@@ -363,6 +383,8 @@ object JDatePickerHelper {
         }
 
     }
+
+    //</editor-fold>
 
     fun LocalDateTime.zeroTime(): LocalDateTime {
         return this.with(LocalTime.MIN)
