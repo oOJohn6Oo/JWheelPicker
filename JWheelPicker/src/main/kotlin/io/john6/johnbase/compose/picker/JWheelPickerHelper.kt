@@ -37,23 +37,7 @@ object JWheelPickerHelper:Serializable {
     const val overlayStyleOvalRectangle = 0
     const val overlayStyleLine = 1
 
-    //<editor-fold desc="Formatter related">
-    var defaultMonthFormatter by lazyMutable {
-        DateTimeFormatterBuilder().appendText(ChronoField.MONTH_OF_YEAR, TextStyle.SHORT)
-            .toFormatter(Locale.getDefault())
-    }
-
-    fun getMonthDisplayText(LocalDateTime: LocalDateTime, language: String): String {
-        if (!language.equals(defaultMonthFormatter.locale.language, true)) {
-            defaultMonthFormatter = defaultMonthFormatter.withLocale(Locale.getDefault())
-        }
-        return defaultMonthFormatter.format(LocalDateTime)
-    }
-
-    fun getDefaultTimeDisplayText(timeValue:Int):String{
-        return timeValue.toString().padStart(2, '0')
-    }
-    //</editor-fold>
+    var fragmentResultKey = "result"
 
     /**
      * 绘制分割线风格的遮罩

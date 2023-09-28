@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import io.john6.johnbase.compose.picker.JDateWheelPicker
 import io.john6.johnbase.compose.picker.JMultiWheelPicker
+import io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.johnbase.compose.picker.JWheelPickerInfo
 import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.johnbase.compose.picker.dialog.JBasePickerDialogFragment
@@ -50,7 +51,7 @@ import java.time.LocalDateTime
  * )
  * ```
  *
- * * result will be send by [FragmentManager.setFragmentResult], key is "result", value is [LocalDateTime] after serialized
+ * * result will be send by [FragmentManager.setFragmentResult], key is [io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey], value is [LocalDateTime] after serialized
  *
  */
 @RequiresApi(Build.VERSION_CODES.O)
@@ -103,7 +104,7 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
             // Wait for wheel picker state to idle
             delay(200)
             tempFM.setFragmentResult(desireTag, Bundle().apply {
-                putSerializable("result", mViewModel.currentSelectedDateTime)
+                putSerializable(fragmentResultKey, mViewModel.currentSelectedDateTime)
             })
         }
     }
