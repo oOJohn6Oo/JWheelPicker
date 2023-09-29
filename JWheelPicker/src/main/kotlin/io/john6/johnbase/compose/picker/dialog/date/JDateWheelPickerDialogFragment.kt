@@ -9,26 +9,16 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import io.john6.johnbase.compose.picker.JDateWheelPicker
-import io.john6.johnbase.compose.picker.JMultiWheelPicker
 import io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey
-import io.john6.johnbase.compose.picker.JWheelPickerInfo
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.johnbase.compose.picker.dialog.JBasePickerDialogFragment
-import io.john6.johnbase.compose.picker.dialog.single.JSinglePickerDialogFragment
-import io.john6.johnbase.compose.ui.JUtil.disableAllVerticalScroll
 import io.john6.johnbase.compose.ui.bottomSafeDrawing
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -126,8 +116,9 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
             datePickerMode = requiredData.datePickerMode,
             timePickerMode = requiredData.timePickerMode,
             containerHorizontalPadding = requiredData.containerHorizontalPaddingInDp.dp,
-            startDateInMillis = requiredData.startDateInMillis,
-            initialSelectedDateInMillis = requiredData.initialSelectedDateInMillis,
+            startLocalDateTime = requiredData.startLocalDateTime,
+            endLocalDateTime = requiredData.endLocalDateTime,
+            initialSelectDateTime = requiredData.initialSelectDateTime,
             drawOverLay = rememberDefaultOverlayStyle(requiredData.overlayStyle),
             onSelectedTimeChanged = onSelectedTimeChanged,
         )
@@ -149,7 +140,7 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
                 if (arguments == null) {
                     arguments = Bundle()
                 }
-                arguments?.putParcelable("data", requiredData)
+                arguments?.putSerializable("data", requiredData)
                 show(fragmentManager, tag)
             }
         }

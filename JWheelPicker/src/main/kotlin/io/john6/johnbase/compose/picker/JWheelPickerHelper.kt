@@ -1,26 +1,16 @@
 package io.john6.johnbase.compose.picker
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.Stroke
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 import java.io.Serializable
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatterBuilder
-import java.time.format.TextStyle
-import java.time.temporal.ChronoField
-import java.util.Locale
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

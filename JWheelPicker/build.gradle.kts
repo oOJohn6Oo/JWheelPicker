@@ -41,6 +41,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.material:material:1.5.1")
+    implementation("androidx.compose.material:material:1.5.2")
     api("com.github.oOJohn6Oo.BaseAndroid:john-base-compose:1.0.5")
 }

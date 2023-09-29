@@ -5,10 +5,10 @@ plugins {
 
 android {
     compileSdk 34
-    namespace "io.john6.appbase"
+    namespace "io.john6.demo.wheelpicker"
 
     defaultConfig {
-        applicationId "io.john6.appbase"
+        applicationId "io.john6.demo.wheelpicker"
         minSdk 21
         targetSdk 34
         versionCode 1
