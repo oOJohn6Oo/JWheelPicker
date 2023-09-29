@@ -1,11 +1,14 @@
 package io.john6.johnbase.compose.picker.dialog.multiple
 
+import android.os.Bundle
+import androidx.annotation.Keep
 import io.john6.johnbase.compose.picker.JWheelPickerInfo
 import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 
 /**
  * Adapter for generate data for [io.john6.johnbase.compose.picker.JMultiWheelPicker]
  */
+@Keep
 interface IMultipleJPickerAdapter {
     val wheelCount: Int
     val initialIndexes: Array<Int>
@@ -66,8 +69,15 @@ interface IMultipleJPickerAdapter {
         }
 
 
-        fun create(clazz: Class<out IMultipleJPickerAdapter>): IMultipleJPickerAdapter {
-            return clazz.getDeclaredConstructor().newInstance()
+        fun create(
+            clazz: Class<out IMultipleJPickerAdapter>,
+            args: Bundle? = null
+        ): IMultipleJPickerAdapter {
+            return try {
+                clazz.getDeclaredConstructor(Bundle::class.java).newInstance(args)
+            } catch (e: Exception) {
+                clazz.getDeclaredConstructor().newInstance()
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package io.john6.johnbase.compose.picker.dialog.multiple
 
+import android.os.Bundle
 import android.os.Parcelable
 import io.john6.johnbase.compose.picker.JPickerOverlayStyle
 import kotlinx.parcelize.Parcelize
@@ -13,8 +14,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class JMultiPickerDialogData(
-    val adapterClass:Class<out IMultipleJPickerAdapter>,
+    val adapterClass: Class<out IMultipleJPickerAdapter>,
+    val adapterParamsAsBundle: Bundle = Bundle(),
     val title: Pair<Int, String> = 0 to "",
     @JPickerOverlayStyle
-    val overlayStyle:Int = 0,
+    val overlayStyle: Int = 0,
 ) : Parcelable

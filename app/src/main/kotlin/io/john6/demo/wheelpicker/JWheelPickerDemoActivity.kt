@@ -1,46 +1,28 @@
-package io.john6.appbase
+package io.john6.demo.wheelpicker
 
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.color.MaterialColors
 import io.john6.johnbase.compose.JohnAppTheme
-import io.john6.johnbase.compose.picker.DatePickerMode
-import io.john6.johnbase.compose.picker.JDateWheelPicker
 import io.john6.johnbase.compose.picker.JWheelPickerHelper
 import io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey
-import io.john6.johnbase.compose.picker.TimePickerMode
 import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.johnbase.compose.picker.dialog.date.JDatePickerDialogData
 import io.john6.johnbase.compose.picker.dialog.date.JDateWheelPickerDialogFragment
@@ -50,7 +32,6 @@ import io.john6.johnbase.compose.picker.dialog.multiple.JMultiplePickerDialogFra
 import io.john6.johnbase.compose.picker.dialog.single.JSinglePickerDialogData
 import io.john6.johnbase.compose.picker.dialog.single.JSinglePickerDialogFragment
 import io.john6.johnbase.compose.spaceLarge
-import io.john6.johnbase.compose.ui.JUtil.disableParentNestedVerticalScroll
 import java.io.Serializable
 import java.time.LocalDateTime
 
@@ -190,18 +171,18 @@ private fun DemoComposeScreen(
         ) {
             item {
                 Button(onClick = showSinglePicker) {
-                    Text(text = "Show Single Piker")
+                    Text(text = "Show Single Picker")
                 }
             }
             item {
                 Button(onClick = showMultiplePicker) {
-                    Text(text = "Show Multiple Piker")
+                    Text(text = "Show Multiple Picker")
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 item {
                     Button(onClick = showDatePicker) {
-                        Text(text = "Show Date Piker")
+                        Text(text = "Show Date Picker")
                     }
                 }
             }

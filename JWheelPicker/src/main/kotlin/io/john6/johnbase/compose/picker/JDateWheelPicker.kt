@@ -5,6 +5,7 @@ import androidx.annotation.IntDef
 import androidx.annotation.RequiresApi
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,21 +17,19 @@ import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.john6.johnbase.compose.picker.JDatePickerHelper.toEpochMilli
-import io.john6.johnbase.compose.picker.JWheelPickerHelper.drawPickerRectOverlay
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 import io.john6.johnbase.compose.picker.DatePickerMode.Companion.DATE_ALL
 import io.john6.johnbase.compose.picker.DatePickerMode.Companion.DATE_MONTH_DAY
 import io.john6.johnbase.compose.picker.DatePickerMode.Companion.DATE_NONE
 import io.john6.johnbase.compose.picker.DatePickerMode.Companion.DATE_YEAR_MONTH
 import io.john6.johnbase.compose.picker.JDatePickerHelper.generateWheelPickerDataForWheelIndex
+import io.john6.johnbase.compose.picker.JWheelPickerHelper.drawPickerRectOverlay
 import io.john6.johnbase.compose.picker.TimePickerMode.Companion.TIME_ALL
 import io.john6.johnbase.compose.picker.TimePickerMode.Companion.TIME_HOUR_MINUTE
 import io.john6.johnbase.compose.picker.TimePickerMode.Companion.TIME_MINUTE_SECOND
 import io.john6.johnbase.compose.picker.TimePickerMode.Companion.TIME_NONE
+import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 
 /**
@@ -42,9 +41,9 @@ import io.john6.johnbase.compose.picker.TimePickerMode.Companion.TIME_NONE
  * @param datePickerMode 需要的日期格式，参考[DatePickerMode]
  * @param timePickerMode 需要的时间格式，参考[TimePickerMode]
  * @param drawOverLay 遮罩层样式，可使用 [JWheelPickerHelper] 中的工具方法快速定制
- * @param startDateInMillis 选择器的开始时间，默认 0L
- * @param endDateInMillis 结束时间，默认 Long.MAX_VALUE
- * @param initialSelectedDateInMillis 初始选中时间，默认当前时间
+ * @param startLocalDateTime 选择器的开始时间，default is 1970-01-01 00:00:00 at local time
+ * @param endLocalDateTime 结束时间，默认为可支持的最大时间 详见 [LocalDateTime.MAX]
+ * @param initialSelectDateTime 初始选中时间，默认为当前时间
  *
  * @param onSelectedTimeChanged 选中的时间改变时的回调，默认无
  * @param getItemText 定制每个滚轮的时间显示格式
@@ -61,56 +60,43 @@ fun JDateWheelPicker(
     hapticFeedBackYThreshold: Float = 20f,
     @DatePickerMode datePickerMode: Int,
     @TimePickerMode timePickerMode: Int,
-    startDateInMillis: Long = 0,
-    endDateInMillis: Long = Long.MAX_VALUE,
-    initialSelectedDateInMillis: Long = LocalDateTime.now().toEpochMilli(),
+    startLocalDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC),
+    endLocalDateTime: LocalDateTime = LocalDateTime.MAX,
+    initialSelectDateTime: LocalDateTime = LocalDateTime.now(),
     getItemText: (wheelIndex: Int, actualValue: Int, selectedDateTime: LocalDateTime, lang:String) -> (Int) -> String = JDatePickerHelper::getDefaultItemText,
     onSelectedTimeChanged: (LocalDateTime) -> Unit = {},
     drawOverLay: (ContentDrawScope.(itemHeightPx: Int, edgeOffsetYPx: Float) -> Unit)? = { itemHeightPx, edgeOffsetYPx ->
         drawPickerRectOverlay(edgeOffsetYPx, itemHeightPx)
     },
 ) {
-    // 最小时间超过最大时间 ===> 错误
-    if (startDateInMillis >= endDateInMillis) {
-        throw IllegalStateException("minimalDateInMillis must less than maximalDateInMillis")
+
+    // Ensure the input is valid
+    LaunchedEffect(key1 = startLocalDateTime, key2 = endLocalDateTime, key3 = initialSelectDateTime){
+        // 最小时间超过最大时间 ===> 错误
+        if (startLocalDateTime >= endLocalDateTime) {
+            throw IllegalStateException("minimalDateInMillis must less than maximalDateInMillis")
+        }
+
+        // 当前选中时间 不在 [最小时间,最大时间] ==>= 错误
+        if (initialSelectDateTime !in startLocalDateTime .. endLocalDateTime) {
+            throw IllegalStateException("initialDateTime must in range of minimalDateInMillis minimalDateInMillis")
+        }
     }
 
     // 日期时间聚合模式
     val dateTimeMode by remember(datePickerMode, timePickerMode) {
         mutableIntStateOf(datePickerMode or timePickerMode)
     }
-
-    // 当前选中时间 不在 [最小时间,最大时间] ==>= 错误
-    if (initialSelectedDateInMillis !in startDateInMillis .. endDateInMillis) {
-        throw IllegalStateException("initialDateTime must in range of minimalDateInMillis minimalDateInMillis")
-    }
-    // 开始时间 以 LocalDateTime 为表示形式
-    val startLocalDateTime = remember(startDateInMillis) {
-        LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(startDateInMillis),
-            ZoneId.systemDefault()
-        )
-    }
-    // 结束时间， 以 LocalDateTime 为表示形式
-    val endLocalDateTime = remember(endDateInMillis) {
-        LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(endDateInMillis),
-            ZoneId.systemDefault()
-        )
-    }
     // 当前选择的时间
     var selectLocalDateTime by rememberSaveable(
         inputs = arrayOf(
-            startDateInMillis,
-            endDateInMillis,
-            initialSelectedDateInMillis,
+            startLocalDateTime,
+            endLocalDateTime,
+            initialSelectDateTime,
             dateTimeMode
         ), key = "selectedDateTime"
     ) {
-        val instant = Instant.ofEpochMilli(initialSelectedDateInMillis)
-        mutableStateOf(
-            LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
-        )
+        mutableStateOf(initialSelectDateTime)
     }
 
     // 获取当前选择的时间 key
