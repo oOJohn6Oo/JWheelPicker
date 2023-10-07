@@ -1,9 +1,10 @@
-package io.john6.johnbase.compose.picker
+package io.john6.base.compose.picker
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.text.intl.Locale
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.bean.JWheelPickerInfo
+import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.Month

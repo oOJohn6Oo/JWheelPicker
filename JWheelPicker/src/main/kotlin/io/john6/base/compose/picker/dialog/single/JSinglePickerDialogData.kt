@@ -1,8 +1,8 @@
-package io.john6.johnbase.compose.picker.dialog.single
+package io.john6.base.compose.picker.dialog.single
 
 import android.os.Parcelable
-import io.john6.johnbase.compose.picker.JPickerOverlayStyle
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.JPickerOverlayStyle
+import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import kotlinx.parcelize.Parcelize
 
 /**

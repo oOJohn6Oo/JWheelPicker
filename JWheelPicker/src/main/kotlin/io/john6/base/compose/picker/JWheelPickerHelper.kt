@@ -1,4 +1,4 @@
-package io.john6.johnbase.compose.picker
+package io.john6.base.compose.picker
 
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset

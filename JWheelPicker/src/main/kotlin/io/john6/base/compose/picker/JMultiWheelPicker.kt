@@ -1,4 +1,4 @@
-package io.john6.johnbase.compose.picker
+package io.john6.base.compose.picker
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -19,8 +19,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.john6.johnbase.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
+import io.john6.base.compose.picker.bean.JWheelPickerInfo
+import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import kotlin.math.roundToInt
 
 
@@ -119,24 +120,4 @@ private fun RowScope.ItemWheelPicker(
             onSelectedItemChanged(pickerData, itemData)
         }
     )
-}
-
-/**
- * 滚轮通用数据
- * @param id 当前滚轮的唯一标识
- * @param itemCount Item 总数量
- * @param itemData 获取 Item 数据的方法
- * @param initialIndex 默认选中项的下标
- */
-data class JWheelPickerInfo(
-    val id: Int,
-    val itemCount: Int,
-    val itemData: (index: Int) -> JWheelPickerItemInfo,
-    val initialIndex: Int,
-) {
-    companion object {
-        val EMPTY = JWheelPickerInfo(
-            0, 0, { JWheelPickerItemInfo.EMPTY }, 0
-        )
-    }
 }

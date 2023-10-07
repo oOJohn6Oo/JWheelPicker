@@ -1,12 +1,12 @@
-package io.john6.johnbase.compose.picker.dialog.multiple
+package io.john6.base.compose.picker.dialog.multiple
 
 import android.os.Bundle
 import androidx.annotation.Keep
-import io.john6.johnbase.compose.picker.JWheelPickerInfo
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.bean.JWheelPickerInfo
+import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 
 /**
- * Adapter for generate data for [io.john6.johnbase.compose.picker.JMultiWheelPicker]
+ * Adapter for generate data for [io.john6.base.compose.picker.JMultiWheelPicker]
  */
 @Keep
 interface IMultipleJPickerAdapter {
