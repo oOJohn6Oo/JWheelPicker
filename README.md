@@ -23,6 +23,23 @@
 - latest version ![LatestVersion]
 - add `implementation("com.github.oOJohn6Oo:JWheelPicker:<version>")`
 
+#### Usage
+
+##### For Any Compose View Use
+
+https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/single/JSinglePickerDialogFragment.kt#L100-L110
+
+https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/multiple/JMultiplePickerDialogFragment.kt#L136-L143
+
+https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/date/JDateWheelPickerDialogFragment.kt#L114-L124
+
+##### For Default BottomSheet Dialog Use
+
+https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L80-L96
+
+https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L98-L107
+
+https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L109-L119
 
 [LatestVersion]: https://jitpack.io/v/oOJohn6Oo/JWheelPicker.svg
 [JWheelPicker]: ./JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/JWheelPicker.kt
