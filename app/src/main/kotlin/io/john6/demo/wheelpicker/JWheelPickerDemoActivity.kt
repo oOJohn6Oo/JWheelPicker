@@ -29,6 +29,7 @@ import io.john6.base.compose.picker.dialog.date.JDateWheelPickerDialogFragment
 import io.john6.base.compose.picker.dialog.multiple.IMultipleJPickerAdapter
 import io.john6.base.compose.picker.dialog.multiple.JMultiPickerDialogData
 import io.john6.base.compose.picker.dialog.multiple.JMultiplePickerDialogFragment
+import io.john6.base.compose.picker.dialog.multiple.TestMultipleJPickerAdapter
 import io.john6.base.compose.picker.dialog.single.JSinglePickerDialogData
 import io.john6.base.compose.picker.dialog.single.JSinglePickerDialogFragment
 import io.john6.johnbase.compose.spaceLarge
@@ -100,7 +101,7 @@ class JWheelPickerDemoActivity : FragmentActivity() {
             requiredData = JMultiPickerDialogData(
                 title = 0 to "MultiplePicker",
                 overlayStyle = JWheelPickerHelper.overlayStyleOvalRectangle,
-                adapterClass = IMultipleJPickerAdapter.testAdapter::class.java
+                adapterClass = TestMultipleJPickerAdapter::class.java
             ),
         )
     }
