@@ -1,4 +1,4 @@
-package io.john6.johnbase.compose.picker.dialog.multiple
+package io.john6.base.compose.picker.dialog.multiple
 
 import android.os.Bundle
 import android.util.Log
@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
-import io.john6.johnbase.compose.picker.JMultiWheelPicker
-import io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey
-import io.john6.johnbase.compose.picker.JWheelPickerInfo
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
-import io.john6.johnbase.compose.picker.dialog.JBasePickerDialogFragment
+import io.john6.base.compose.picker.JMultiWheelPicker
+import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
+import io.john6.base.compose.picker.bean.JWheelPickerInfo
+import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
 import io.john6.johnbase.compose.ui.JUtil.disableAllVerticalScroll
 import io.john6.johnbase.compose.ui.bottomSafeDrawing
 import kotlinx.coroutines.MainScope
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
  * )
  * ```
  *
- * * result will be send by [FragmentManager.setFragmentResult]，key is [io.john6.johnbase.compose.picker.JWheelPickerHelper.fragmentResultKey], value is [JWheelPickerItemInfo] after Parceled
+ * * result will be send by [FragmentManager.setFragmentResult]，key is [io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey], value is [JWheelPickerItemInfo] after Parceled
  *
  */
 class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
@@ -120,7 +120,7 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
             }
         }
 
-        val onSelectedItemChanged: (pickerInfo:JWheelPickerInfo, itemInfo:JWheelPickerItemInfo) -> Unit = remember {
+        val onSelectedItemChanged: (pickerInfo: JWheelPickerInfo, itemInfo: JWheelPickerItemInfo) -> Unit = remember {
             { pickerInfo, itemInfo ->
                 selectedIndexes[pickerInfo.id] = itemInfo.index
                 mViewModel.currentSelectedItemInfo[pickerInfo.id] = itemInfo

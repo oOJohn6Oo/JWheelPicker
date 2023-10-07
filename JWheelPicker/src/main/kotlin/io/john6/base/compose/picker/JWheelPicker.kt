@@ -1,4 +1,4 @@
-package io.john6.johnbase.compose.picker
+package io.john6.base.compose.picker
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.john6.johnbase.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
-import io.john6.johnbase.compose.picker.bean.getText
+import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
+import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.bean.getText
 import io.john6.johnbase.compose.ui.JUtil.disableParentNestedVerticalScroll
 import io.john6.johnbase.compose.ui.rememberJMaxScrollFlingBehavior
 import kotlinx.coroutines.launch

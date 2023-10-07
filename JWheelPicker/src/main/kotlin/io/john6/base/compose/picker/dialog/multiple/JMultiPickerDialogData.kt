@@ -1,8 +1,8 @@
-package io.john6.johnbase.compose.picker.dialog.multiple
+package io.john6.base.compose.picker.dialog.multiple
 
 import android.os.Bundle
 import android.os.Parcelable
-import io.john6.johnbase.compose.picker.JPickerOverlayStyle
+import io.john6.base.compose.picker.JPickerOverlayStyle
 import kotlinx.parcelize.Parcelize
 
 /**

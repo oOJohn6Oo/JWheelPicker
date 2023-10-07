@@ -1,10 +1,10 @@
-package io.john6.johnbase.compose.picker.dialog.date
+package io.john6.base.compose.picker.dialog.date
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import io.john6.johnbase.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)

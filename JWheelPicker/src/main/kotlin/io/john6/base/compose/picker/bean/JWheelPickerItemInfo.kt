@@ -1,4 +1,4 @@
-package io.john6.johnbase.compose.picker.bean
+package io.john6.base.compose.picker.bean
 
 import android.os.Parcelable
 import androidx.annotation.StringRes

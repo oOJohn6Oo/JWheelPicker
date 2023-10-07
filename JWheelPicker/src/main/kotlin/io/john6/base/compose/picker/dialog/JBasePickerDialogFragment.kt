@@ -1,4 +1,4 @@
-package io.john6.johnbase.compose.picker.dialog
+package io.john6.base.compose.picker.dialog
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -36,15 +36,15 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
 import android.graphics.Color as androidColor
 import io.john6.johnbase.compose.JohnAppTheme
-import io.john6.johnbase.compose.picker.JPickerOverlayStyle
-import io.john6.johnbase.compose.picker.JWheelPickerHelper
-import io.john6.johnbase.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
-import io.john6.johnbase.compose.picker.JWheelPickerHelper.drawPickerRectOverlay
+import io.john6.base.compose.picker.JPickerOverlayStyle
+import io.john6.base.compose.picker.JWheelPickerHelper
+import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
+import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerRectOverlay
 import io.john6.johnbase.compose.spaceLarge
 import io.john6.johnbase.compose.spaceMedium
 import io.john6.johnbase.compose.ui.JElevationOverlayInBothLightAndDarkMode
 import io.john6.johnbase.compose.ui.jSurfaceColorAtElevation
-import io.john6.johnbase.jwheelpicker.R
+import io.john6.base.jwheelpicker.R
 
 /**
  * DialogFragment for custom Picker

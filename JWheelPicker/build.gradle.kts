@@ -6,7 +6,7 @@ plugins {
 apply(from = "publish.gradle")
 
 android {
-    namespace = "io.john6.johnbase.jwheelpicker"
+    namespace = "io.john6.base.jwheelpicker"
     compileSdk = 34
 
     defaultConfig {
