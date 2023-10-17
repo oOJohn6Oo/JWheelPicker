@@ -19,8 +19,8 @@ import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.bean.JWheelPickerInfo
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
-import io.john6.johnbase.compose.ui.JUtil.disableAllVerticalScroll
-import io.john6.johnbase.compose.ui.bottomSafeDrawing
+import io.john6.base.compose.ui.JUtil.disableAllVerticalScroll
+import io.john6.base.compose.ui.bottomSafeDrawing
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -84,7 +84,7 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
     }
 
     override fun onSubmit() {
-        if(disableTouch) return
+        if (disableTouch) return
         disableTouch = true
         val tempFM = parentFragmentManager
         // In case multiple picker shows in a single fragment, we need to use tag to distinguish
@@ -94,7 +94,10 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
             // Wait for wheel picker state to idle
             delay(200)
             tempFM.setFragmentResult(desireTag, Bundle().apply {
-                putParcelableArray(fragmentResultKey, mViewModel.currentSelectedItemInfo.toTypedArray())
+                putParcelableArray(
+                    fragmentResultKey,
+                    mViewModel.currentSelectedItemInfo.toTypedArray()
+                )
             })
         }
     }
@@ -104,28 +107,30 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
         modifier: Modifier,
         requiredData: JMultiPickerDialogData,
         adapter: IMultipleJPickerAdapter
-    ){
+    ) {
         val selectedIndexes: MutableList<Int> = remember {
             mutableStateListOf(*adapter.initialIndexes).apply {
                 forEachIndexed { index, initialIndex ->
                     val generatePickerInfoFunc = adapter.generateJWheelPickerInfo(index, this)
-                    mViewModel.currentSelectedItemInfo[index] = generatePickerInfoFunc.itemData(initialIndex)
+                    mViewModel.currentSelectedItemInfo[index] =
+                        generatePickerInfoFunc.itemData(initialIndex)
                 }
             }
         }
 
         val generateJWheelPickerInfo: (wheelIndex: Int) -> JWheelPickerInfo = remember {
-             { wheelIndex ->
+            { wheelIndex ->
                 adapter.generateJWheelPickerInfo(wheelIndex, selectedIndexes)
             }
         }
 
-        val onSelectedItemChanged: (pickerInfo: JWheelPickerInfo, itemInfo: JWheelPickerItemInfo) -> Unit = remember {
-            { pickerInfo, itemInfo ->
-                selectedIndexes[pickerInfo.id] = itemInfo.index
-                mViewModel.currentSelectedItemInfo[pickerInfo.id] = itemInfo
+        val onSelectedItemChanged: (pickerInfo: JWheelPickerInfo, itemInfo: JWheelPickerItemInfo) -> Unit =
+            remember {
+                { pickerInfo, itemInfo ->
+                    selectedIndexes[pickerInfo.id] = itemInfo.index
+                    mViewModel.currentSelectedItemInfo[pickerInfo.id] = itemInfo
+                }
             }
-        }
 
         val key: (wheelIndex: Int) -> Any = remember {
             { wheelIndex ->
@@ -151,7 +156,7 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
             requiredData: JMultiPickerDialogData,
             tag: String = TAG,
         ): JMultiplePickerDialogFragment? {
-            if(fragmentManager.findFragmentByTag(tag) != null) {
+            if (fragmentManager.findFragmentByTag(tag) != null) {
                 Log.d(TAG, "JMultiplePicker with tag $tag exist")
                 return null
             }

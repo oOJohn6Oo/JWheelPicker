@@ -20,19 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
-import io.john6.johnbase.compose.JohnAppTheme
+import io.john6.base.compose.JAppTheme
 import io.john6.base.compose.picker.JWheelPickerHelper
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.base.compose.picker.dialog.date.JDatePickerDialogData
 import io.john6.base.compose.picker.dialog.date.JDateWheelPickerDialogFragment
-import io.john6.base.compose.picker.dialog.multiple.IMultipleJPickerAdapter
 import io.john6.base.compose.picker.dialog.multiple.JMultiPickerDialogData
 import io.john6.base.compose.picker.dialog.multiple.JMultiplePickerDialogFragment
 import io.john6.base.compose.picker.dialog.multiple.TestMultipleJPickerAdapter
 import io.john6.base.compose.picker.dialog.single.JSinglePickerDialogData
 import io.john6.base.compose.picker.dialog.single.JSinglePickerDialogFragment
-import io.john6.johnbase.compose.spaceLarge
+import io.john6.base.compose.spaceLarge
 import java.io.Serializable
 import java.time.LocalDateTime
 
@@ -162,7 +161,7 @@ private fun DemoComposeScreen(
     showMultiplePicker: () -> Unit,
     showDatePicker: () -> Unit
 ) {
-    JohnAppTheme {
+    JAppTheme {
         LazyColumn(
             modifier = Modifier
                 .background(MaterialTheme.colors.background)
