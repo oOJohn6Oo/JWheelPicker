@@ -41,8 +41,8 @@ import androidx.compose.ui.unit.sp
 import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.base.compose.picker.bean.getText
-import io.john6.johnbase.compose.ui.JUtil.disableParentNestedVerticalScroll
-import io.john6.johnbase.compose.ui.rememberJMaxScrollFlingBehavior
+import io.john6.base.compose.ui.JUtil.disableParentNestedVerticalScroll
+import io.john6.base.compose.ui.rememberJMaxScrollFlingBehavior
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -130,8 +130,8 @@ fun JWheelPicker(
         with(density) { edgeOffsetYPx.absoluteValue.toDp() }
     }
 
-    LaunchedEffect(key1 = itemCount == 0){
-        if(itemCount == 0){
+    LaunchedEffect(key1 = itemCount == 0) {
+        if (itemCount == 0) {
             onSelectedItemChanged?.invoke(JWheelPickerItemInfo.EMPTY)
         }
     }

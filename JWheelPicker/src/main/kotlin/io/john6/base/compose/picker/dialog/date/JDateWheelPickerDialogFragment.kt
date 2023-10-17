@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import io.john6.base.compose.picker.JDateWheelPicker
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
-import io.john6.johnbase.compose.ui.bottomSafeDrawing
+import io.john6.base.compose.ui.bottomSafeDrawing
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -84,7 +84,7 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
     }
 
     override fun onSubmit() {
-        if(disableTouch) return
+        if (disableTouch) return
         disableTouch = true
         val tempFM = parentFragmentManager
         // In case multiple picker shows in a single fragment, we need to use tag to distinguish
@@ -103,7 +103,7 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
     fun DatePicker(
         modifier: Modifier,
         requiredData: JDatePickerDialogData,
-    ){
+    ) {
 
         val onSelectedTimeChanged: (LocalDateTime) -> Unit = remember {
             {
@@ -132,7 +132,7 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
             requiredData: JDatePickerDialogData,
             tag: String = TAG,
         ): JDateWheelPickerDialogFragment? {
-            if(fragmentManager.findFragmentByTag(tag) != null) {
+            if (fragmentManager.findFragmentByTag(tag) != null) {
                 Log.d(TAG, "JDatePicker with tag $tag exist")
                 return null
             }

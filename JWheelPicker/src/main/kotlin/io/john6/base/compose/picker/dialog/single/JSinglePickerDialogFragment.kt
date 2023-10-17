@@ -17,12 +17,12 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
-import io.john6.johnbase.compose.R
 import io.john6.base.compose.picker.JWheelPicker
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
-import io.john6.johnbase.compose.ui.bottomSafeDrawing
+import io.john6.base.compose.ui.bottomSafeDrawing
+import io.john6.base.jwheelpicker.R
 
 /**
  * DialogFragment for custom single column picker
@@ -118,7 +118,7 @@ open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
             requiredData: JSinglePickerDialogData,
             tag: String = TAG,
         ): JSinglePickerDialogFragment? {
-            if(fragmentManager.findFragmentByTag(tag) != null) {
+            if (fragmentManager.findFragmentByTag(tag) != null) {
                 Log.d(TAG, "JSinglePicker with tag $tag exist")
                 return null
             }

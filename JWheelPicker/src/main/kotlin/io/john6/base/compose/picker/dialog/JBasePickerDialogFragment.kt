@@ -34,16 +34,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
+import io.john6.base.compose.JAppTheme
 import android.graphics.Color as androidColor
-import io.john6.johnbase.compose.JohnAppTheme
 import io.john6.base.compose.picker.JPickerOverlayStyle
 import io.john6.base.compose.picker.JWheelPickerHelper
 import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
 import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerRectOverlay
-import io.john6.johnbase.compose.spaceLarge
-import io.john6.johnbase.compose.spaceMedium
-import io.john6.johnbase.compose.ui.JElevationOverlayInBothLightAndDarkMode
-import io.john6.johnbase.compose.ui.jSurfaceColorAtElevation
+import io.john6.base.compose.spaceLarge
+import io.john6.base.compose.spaceMedium
+import io.john6.base.compose.ui.JElevationOverlayInBothLightAndDarkMode
+import io.john6.base.compose.ui.jSurfaceColorAtElevation
 import io.john6.base.jwheelpicker.R
 
 /**
@@ -65,7 +65,7 @@ open class JBasePickerDialogFragment : DialogFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                JohnAppTheme {
+                JAppTheme {
                     JBottomSheet()
                 }
             }
@@ -154,7 +154,7 @@ open class JBasePickerDialogFragment : DialogFragment() {
     }
 
     @Composable
-    internal open fun rememberDefaultOverlayStyle(@JPickerOverlayStyle overlayStyle:Int): (ContentDrawScope.(Int, Float) -> Unit)? {
+    internal open fun rememberDefaultOverlayStyle(@JPickerOverlayStyle overlayStyle: Int): (ContentDrawScope.(Int, Float) -> Unit)? {
 
         val scrimColor = jSurfaceColorAtElevation(
             color = MaterialTheme.colors.surface,
@@ -170,9 +170,9 @@ open class JBasePickerDialogFragment : DialogFragment() {
 
         val lineColor = MaterialTheme.colors.onBackground.copy(alpha = 0.1f)
 
-        val horizontalOverlayPadding = with(LocalDensity.current){ (16.dp).toPx() }
-        val verticalOverlayPadding = with(LocalDensity.current){ 0 - (4.dp).toPx() }
-        val overlayRadius = with(LocalDensity.current){ (8.dp).toPx() }
+        val horizontalOverlayPadding = with(LocalDensity.current) { (16.dp).toPx() }
+        val verticalOverlayPadding = with(LocalDensity.current) { 0 - (4.dp).toPx() }
+        val overlayRadius = with(LocalDensity.current) { (8.dp).toPx() }
 
         val drawOverLay: (ContentDrawScope.(itemHeightPx: Int, edgeOffsetYPx: Float) -> Unit)? =
             remember {

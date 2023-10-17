@@ -36,11 +36,11 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
 }
 
 dependencies {
-    implementation("androidx.compose.material:material:1.5.2")
-    api("com.github.oOJohn6Oo.BaseAndroid:john-base-compose:1.0.5")
+    implementation("androidx.compose.material:material:1.5.3")
+    api("com.github.oOJohn6Oo.BaseAndroid:john-base-compose:1.0.7")
 }
