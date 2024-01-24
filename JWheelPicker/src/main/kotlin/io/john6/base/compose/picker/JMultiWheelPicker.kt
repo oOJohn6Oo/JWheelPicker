@@ -106,12 +106,12 @@ private fun RowScope.ItemWheelPicker(
     }
     JWheelPicker(
         modifier = Modifier
-           .weight(1f),
-        height = height,
-        itemVerticalPadding = itemVerticalPadding,
+            .weight(1f),
+        size = height,
+        itemPadding = itemVerticalPadding,
         enableHapticFeedback = enableHapticFeedback,
         textStyle = textStyle,
-        confirmSelectYThreshold = confirmSelectYThreshold,
+        confirmSelectDistanceThreshold = confirmSelectYThreshold,
         itemCount = pickerData.itemCount,
         itemData = pickerData.itemData,
         initialIndex = pickerData.initialIndex,
