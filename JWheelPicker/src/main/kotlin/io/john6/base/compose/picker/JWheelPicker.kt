@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.graphicsLayer
@@ -76,6 +77,7 @@ fun JWheelPicker(
     size: Dp = 240.dp,
     itemWidthDp: Dp = Dp.Unspecified,
     itemPadding: Dp = 4.dp,
+    selectedTextColor: Color = Color.Unspecified,
     enableHapticFeedback: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
     hapticFeedBackThreshold: Float = 20f,
@@ -92,6 +94,7 @@ fun JWheelPicker(
         size = size,
         itemWidthDp = itemWidthDp,
         itemPadding = itemPadding,
+        selectedTextColor = selectedTextColor,
         enableHapticFeedback = enableHapticFeedback,
         textStyle = textStyle,
         confirmSelectDistanceThreshold = hapticFeedBackThreshold,
@@ -120,6 +123,7 @@ fun JWheelPicker(
     size: Dp = 240.dp,
     itemWidthDp: Dp = Dp.Unspecified,
     itemPadding: Dp = 4.dp,
+    selectedTextColor: Color = Color.Unspecified,
     enableHapticFeedback: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
     confirmSelectDistanceThreshold: Float = 20f,
@@ -148,7 +152,7 @@ fun JWheelPicker(
         mutableIntStateOf(with(density) { (fontSize.toPx() + (itemPadding * 2).toPx()).roundToInt() })
     }
     // 边缘 Item 移动到中心需要的偏移量
-    val edgeOffsetPx = remember(size, itemHeightPx) {
+    val edgeOffsetPx = remember(size, itemHeightPx, itemWidthDp) {
         when (arrangement) {
             JWheelPickerArrangement.Vertical ->
                 (with(density) { size.toPx() } - itemHeightPx) / 2f
@@ -198,6 +202,28 @@ fun JWheelPicker(
         }
     }
 
+
+    // 最终文字样式
+    val desireTextStyle: (Int) -> TextStyle = if(selectedTextColor == Color.Unspecified){
+        // 未设置选中文字颜色，则直接为不可变的方法
+        remember {
+            {
+                textStyle
+            }
+        }
+    }else{ // 设置了选中文字颜色，则需要根据选中下标判断是否需要变色
+        remember(currentSelectedItemIndex, selectedTextColor, textStyle.color) {
+            {
+                val finalColor = if (it != currentSelectedItemIndex) {
+                    textStyle.color
+                } else {
+                    selectedTextColor
+                }
+                textStyle.copy(color = finalColor)
+            }
+        }
+    }
+
     var needPerformSnapScroll by remember { mutableStateOf(false) }
 
     var hasPerformHapticFeedback by remember {
@@ -224,7 +250,7 @@ fun JWheelPicker(
                         index = it,
                         itemHeightDp = with(density) { itemHeightPx.toDp() },
                         text = itemData(it).getText(),
-                        textStyle = textStyle,
+                        textStyle = desireTextStyle(it),
                         getLayoutInfo = getLayoutInfo,
                     )
                 }
@@ -250,7 +276,7 @@ fun JWheelPicker(
                             height = with(density) { itemHeightPx.toDp() }
                         ),
                         text = itemData(it).getText(),
-                        textStyle = textStyle,
+                        textStyle = desireTextStyle(it),
                         getLayoutInfo = getLayoutInfo,
                     )
                 }
