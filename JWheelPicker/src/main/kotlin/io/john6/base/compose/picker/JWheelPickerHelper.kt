@@ -1,5 +1,8 @@
 package io.john6.base.compose.picker
 
+import androidx.annotation.FloatRange
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -10,7 +13,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
-import java.io.Serializable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -23,14 +25,24 @@ import kotlin.reflect.KProperty
  * @since 2023-03-14
  *
  */
-object JWheelPickerHelper:Serializable {
-    const val overlayStyleOvalRectangle = 0
-    const val overlayStyleLine = 1
+object JWheelPickerHelper {
+    const val OVERLAY_STYLE_RECTANGLE = 0
+    const val OVERLAY_STYLE_LINE = 1
 
     var fragmentResultKey = "result"
 
+
+    var DefaultTheme: @Composable (content: @Composable () -> Unit) -> Unit = { content ->
+        MaterialTheme { content() }
+    }
+
+    @FloatRange(from = 1.0, to = 2.0)
+    var defaultHorizontalWheelCurveRate = 1.24f
+    @FloatRange(from = 1.0, to = 2.0)
+    var defaultVerticalWheelCurveRate = 1.24f
+
     /**
-     * 绘制分割线风格的遮罩
+     * Overlay For [OVERLAY_STYLE_LINE]
      */
     fun ContentDrawScope.drawPickerLineOverlay(
         edgeOffsetYPx: Float,
@@ -71,7 +83,17 @@ object JWheelPickerHelper:Serializable {
     }
 
     /**
-     * 绘制矩形框风格的遮罩
+     * Overlay For [OVERLAY_STYLE_RECTANGLE]
+     *
+     * iOS style picker overlay
+     *
+     * @param edgeOffsetYPx 顶部偏移量
+     * @param itemHeightPx height of each Picker Items
+     * @param scrimColor color of overlay drawn on top of Picker Items
+     * @param fillColor color of center item overlay
+     * @param horizontalPadding horizontal padding of this overlay
+     * @param verticalPadding vertical padding of this overlay
+     * @param radius radius of center item overlay
      */
     fun ContentDrawScope.drawPickerRectOverlay(
         edgeOffsetYPx: Float,
@@ -145,25 +167,14 @@ object JWheelPickerHelper:Serializable {
             addRect(Rect(0f,0f,width,height))
         }
         val focusPath = Path().apply {
-            addRoundRect(RoundRect(horizontalPadding, edgeOffsetY+verticalPadding, width - horizontalPadding,edgeOffsetY + itemHeightPx - verticalPadding,
-            radius, radius))
+            val left = horizontalPadding
+            val top = edgeOffsetY + verticalPadding
+            val right = width - horizontalPadding * 2
+            val bottom = edgeOffsetY + itemHeightPx - verticalPadding
+            addRoundRect(RoundRect(left, top, right, bottom, radius, radius))
         }
         val resPath = Path()
         resPath.op(wholeSizePath,focusPath, PathOperation.Difference)
         return resPath
     }
-
-}
-
-class lazyMutable<T>(val initializer: () -> T):ReadWriteProperty<Any?,T> {
-    private var currentValue:T? = null
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        return currentValue ?: initializer().also { currentValue = it }
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        currentValue = value
-    }
-
 }

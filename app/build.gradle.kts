@@ -1,29 +1,34 @@
 plugins {
-    id("com.android.library")
-    id("kotlin-parcelize")
-    id("org.jetbrains.kotlin.android")
+    id("com.android.application")
+    id("kotlin-android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-apply(from = "publish.gradle")
-
 android {
-    namespace = "io.john6.base.jwheelpicker"
+    namespace = "io.john6.demo.wheelpicker"
     compileSdk = 34
 
     defaultConfig {
+        applicationId = "io.john6.demo.wheelpicker"
         minSdk = 21
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+
+        resourceConfigurations += setOf("zh", "en")
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs["debug"]
         }
     }
     compileOptions {
@@ -39,8 +44,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":JWheelPicker"))
     implementation("androidx.compose.material:material:1.7.0")
     implementation("androidx.fragment:fragment-ktx:1.8.3")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
 }

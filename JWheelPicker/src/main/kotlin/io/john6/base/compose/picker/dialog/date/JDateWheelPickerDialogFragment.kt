@@ -9,9 +9,13 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
@@ -19,10 +23,10 @@ import androidx.lifecycle.ViewModelProvider
 import io.john6.base.compose.picker.JDateWheelPicker
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
-import io.john6.base.compose.ui.bottomSafeDrawing
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import onlyBottomSafeDrawing
 import java.time.LocalDateTime
 
 
@@ -41,11 +45,19 @@ import java.time.LocalDateTime
  * )
  * ```
  *
- * * result will be send by [FragmentManager.setFragmentResult], key is [io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey], value is [LocalDateTime] after serialized
+ * * result will be send by [FragmentManager.setFragmentResult]
+ * key is [io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey]
+ * value is [LocalDateTime] after serialized
  *
+ * ```kt
+ * supportFragmentManager.setFragmentResultListener(JDateWheelPickerDialogFragment.TAG, this) { _, bundle ->
+ *     val result = bundle.getSerializableCompat(fragmentResultKey, LocalDateTime::class.java)
+ *     // Write Your Code Here
+ * }
+ * ```
  */
 @RequiresApi(Build.VERSION_CODES.O)
-class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
+open class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
     private lateinit var mViewModel: JDateWheelPickerViewModel
     private var disableTouch = false
 
@@ -68,9 +80,10 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
 
     @Composable
     override fun ContentView() {
-        Column(modifier = Modifier.bottomSafeDrawing()) {
+        Column(modifier = Modifier.onlyBottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
+                imageVector = Icons.AutoMirrored.Filled.Send,
                 onSubmit = this@JDateWheelPickerDialogFragment::onSubmit
             )
 
@@ -78,6 +91,7 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
                 modifier = Modifier
                     .fillMaxWidth(),
                 requiredData = mViewModel.requiredData,
+                onSelectedTimeChanged = mViewModel::currentSelectedDateTime::set
             )
 
         }
@@ -103,13 +117,8 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
     fun DatePicker(
         modifier: Modifier,
         requiredData: JDatePickerDialogData,
+        onSelectedTimeChanged: (LocalDateTime) -> Unit,
     ) {
-
-        val onSelectedTimeChanged: (LocalDateTime) -> Unit = remember {
-            {
-                mViewModel.currentSelectedDateTime = it
-            }
-        }
 
         JDateWheelPicker(
             modifier = modifier,
@@ -121,6 +130,7 @@ class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
             initialSelectDateTime = requiredData.initialSelectDateTime,
             drawOverLay = rememberDefaultOverlayStyle(requiredData.overlayStyle),
             onSelectedTimeChanged = onSelectedTimeChanged,
+            selectedTextColor = requiredData.getDesireSelectTextColor(LocalContext.current),
         )
     }
 

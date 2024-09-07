@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
@@ -58,6 +59,7 @@ fun JDateWheelPicker(
     containerHorizontalPadding: Dp = 0.dp,
     enableHapticFeedback: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
+    selectedTextColor: Color = Color.Unspecified,
     hapticFeedBackYThreshold: Float = 20f,
     @DatePickerMode datePickerMode: Int,
     @TimePickerMode timePickerMode: Int,
@@ -169,6 +171,7 @@ fun JDateWheelPicker(
         containerHorizontalPadding = containerHorizontalPadding,
         enableHapticFeedback = enableHapticFeedback,
         textStyle = textStyle,
+        selectedTextColor = selectedTextColor,
         hapticFeedBackYThreshold = hapticFeedBackYThreshold,
         wheelCount = wheelCount,
         generateJWheelPickerInfo = generateJWheelPickerInfo,

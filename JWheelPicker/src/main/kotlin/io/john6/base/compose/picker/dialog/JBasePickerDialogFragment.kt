@@ -1,13 +1,24 @@
 package io.john6.base.compose.picker.dialog
 
+import JElevationOverlayInBothLightAndDarkMode
+import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.BackEventCompat
+import androidx.activity.ComponentDialog
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -17,8 +28,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,23 +43,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
-import io.john6.base.compose.JAppTheme
-import android.graphics.Color as androidColor
 import io.john6.base.compose.picker.JPickerOverlayStyle
 import io.john6.base.compose.picker.JWheelPickerHelper
 import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
 import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerRectOverlay
-import io.john6.base.compose.spaceLarge
-import io.john6.base.compose.spaceMedium
-import io.john6.base.compose.ui.JElevationOverlayInBothLightAndDarkMode
-import io.john6.base.compose.ui.jSurfaceColorAtElevation
 import io.john6.base.jwheelpicker.R
+import jSurfaceColorAtElevation
+import onlyBottomSafeDrawing
+import android.graphics.Color as androidColor
 
 /**
  * DialogFragment for custom Picker
  */
-open class JBasePickerDialogFragment : DialogFragment() {
-
+@SuppressLint("RestrictedApi")
+abstract class JBasePickerDialogFragment : DialogFragment() {
+    private var bottomContainerBackHelper: JBottomContainerBackHelper? = null
     override fun getTheme() = R.style.JPickerDialogTheme
 
     /**
@@ -65,9 +72,10 @@ open class JBasePickerDialogFragment : DialogFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                JAppTheme {
+                JWheelPickerHelper.DefaultTheme {
                     JBottomSheet()
                 }
+                bottomContainerBackHelper = JBottomContainerBackHelper(this)
             }
         }
     }
@@ -79,12 +87,15 @@ open class JBasePickerDialogFragment : DialogFragment() {
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             setBackgroundDrawable(ColorDrawable(androidColor.TRANSPARENT))
         }
+        (dialog as? ComponentDialog)?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            mBottomSheetBackCallback
+        )
     }
 
     /**
      * BottomSheet 由外部遮罩区域、手势导致的弹窗消失
      */
-    @OptIn(ExperimentalMaterialApi::class)
     internal open fun confirmStateChange(pendingValue: ModalBottomSheetValue): Boolean {
         return isCancelable
     }
@@ -92,7 +103,6 @@ open class JBasePickerDialogFragment : DialogFragment() {
     internal open fun onSubmit() {
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     internal open fun JBottomSheet() {
         val sheetState = rememberModalBottomSheetState(
@@ -122,22 +132,20 @@ open class JBasePickerDialogFragment : DialogFragment() {
     }
 
     @Composable
-    internal open fun ContentView() {
-
-    }
+    abstract fun ContentView()
 
     @Composable
     internal open fun DefaultPickerHeader(
         title: String,
-        imageVector: ImageVector = Icons.Outlined.Send,
+        imageVector: ImageVector,
         onSubmit: () -> Unit
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    horizontal = MaterialTheme.spaceLarge,
-                    vertical = MaterialTheme.spaceMedium
+                    horizontal = 16.dp,
+                    vertical = 8.dp
                 )
         ) {
             Text(
@@ -177,7 +185,7 @@ open class JBasePickerDialogFragment : DialogFragment() {
         val drawOverLay: (ContentDrawScope.(itemHeightPx: Int, edgeOffsetYPx: Float) -> Unit)? =
             remember {
                 { itemHeightPx, edgeOffsetYPx ->
-                    if (overlayStyle == JWheelPickerHelper.overlayStyleOvalRectangle) {
+                    if (overlayStyle == JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE) {
                         drawPickerRectOverlay(
                             edgeOffsetYPx = edgeOffsetYPx,
                             itemHeightPx = itemHeightPx,
@@ -207,6 +215,40 @@ open class JBasePickerDialogFragment : DialogFragment() {
             title.second
         } else {
             stringResource(title.first)
+        }
+    }
+
+
+    override fun setCancelable(cancelable: Boolean) {
+        super.setCancelable(cancelable)
+        mBottomSheetBackCallback.isEnabled = cancelable
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        val desireTag = this.tag ?: return
+        parentFragmentManager.setFragmentResult(desireTag, Bundle().apply {
+            putBoolean("dismiss", true)
+        })
+    }
+
+    val mBottomSheetBackCallback = object : OnBackPressedCallback(isCancelable) {
+        override fun handleOnBackStarted(backEvent: BackEventCompat) {
+            bottomContainerBackHelper?.startBackProgress(backEvent)
+        }
+
+        override fun handleOnBackProgressed(backEvent: BackEventCompat) {
+            bottomContainerBackHelper?.updateBackProgress(backEvent)
+        }
+
+        override fun handleOnBackPressed() {
+            if(isCancelable){
+                dismiss()
+            }
+        }
+
+        override fun handleOnBackCancelled() {
+            bottomContainerBackHelper?.cancelBackProgress()
         }
     }
 }

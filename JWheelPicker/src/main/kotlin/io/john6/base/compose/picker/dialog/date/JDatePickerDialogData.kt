@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import io.john6.base.compose.picker.DatePickerMode
 import io.john6.base.compose.picker.JPickerOverlayStyle
 import io.john6.base.compose.picker.TimePickerMode
+import io.john6.base.compose.picker.dialog.JPickerDialogBaseData
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -25,9 +26,10 @@ import java.time.ZoneOffset
  */
 @RequiresApi(Build.VERSION_CODES.O)
 data class JDatePickerDialogData(
-    val title: Pair<Int, String> = 0 to "",
+    override val title: Pair<Int, String> = 0 to "",
     @JPickerOverlayStyle
-    val overlayStyle: Int = 0,
+    override val overlayStyle: Int = 0,
+    override val selectTextColorResId: Int = 0,
     val containerHorizontalPaddingInDp: Int = 0,
     @DatePickerMode val datePickerMode: Int = DatePickerMode.DATE_ALL,
     @TimePickerMode val timePickerMode: Int = TimePickerMode.TIME_ALL,
@@ -38,4 +40,4 @@ data class JDatePickerDialogData(
     ),
     val endLocalDateTime: LocalDateTime = LocalDateTime.MAX,
     val initialSelectDateTime: LocalDateTime = LocalDateTime.now(),
-) : Serializable
+) : JPickerDialogBaseData(),Serializable

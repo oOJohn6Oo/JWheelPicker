@@ -7,10 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
@@ -18,12 +23,12 @@ import io.john6.base.compose.picker.JMultiWheelPicker
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.bean.JWheelPickerInfo
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.dialog.IJPickerAdapter
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
-import io.john6.base.compose.ui.JUtil.disableAllVerticalScroll
-import io.john6.base.compose.ui.bottomSafeDrawing
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import onlyBottomSafeDrawing
 
 
 /**
@@ -32,17 +37,25 @@ import kotlinx.coroutines.launch
  * Example to use
  * ```kotlin
  * JMultiplePickerDialogFragment.show(
- *     parentFragmentManager,
+ *     supportFragmentManager,
  *     requiredData = JMultiPickerDialogData(
  *         title = 0 to "MultiplePicker",
- *         overlayStyle = JWheelPickerHelper.overlayStyleOvalRectangle,
- *         adapterClass = IMultipleJPickerAdapter.testAdapter::class.java
+ *         overlayStyle = JWheelPickerHelper.OVERLAY_STYLE_LINE,
+ *         adapterClass = TestMultipleJPickerAdapter::class.java
  *     ),
  * )
  * ```
  *
- * * result will be send by [FragmentManager.setFragmentResult]，key is [io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey], value is [JWheelPickerItemInfo] after Parceled
+ * * result will be send by [FragmentManager.setFragmentResult]
+ * key is [io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey]
+ * value is [JWheelPickerItemInfo] after Parceled
  *
+ * ```kt
+ * supportFragmentManager.setFragmentResultListener(JMultiplePickerDialogFragment.TAG, this) { _, bundle ->
+ *     val result = bundle.getParcelableArrayCompat(fragmentResultKey, JWheelPickerItemInfo::class.java)
+ *     // Write Your Code Here
+ * }
+ * ```
  */
 class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
     private lateinit var mViewModel: JMultiplePickerViewModel
@@ -67,9 +80,10 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
 
     @Composable
     override fun ContentView() {
-        Column(modifier = Modifier.bottomSafeDrawing()) {
+        Column(modifier = Modifier.onlyBottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
+                imageVector = Icons.AutoMirrored.Filled.Send,
                 onSubmit = this@JMultiplePickerDialogFragment::onSubmit
             )
 
@@ -106,16 +120,10 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
     fun MultiplePicker(
         modifier: Modifier,
         requiredData: JMultiPickerDialogData,
-        adapter: IMultipleJPickerAdapter
+        adapter: IJPickerAdapter
     ) {
         val selectedIndexes: MutableList<Int> = remember {
-            mutableStateListOf(*adapter.initialIndexes).apply {
-                forEachIndexed { index, initialIndex ->
-                    val generatePickerInfoFunc = adapter.generateJWheelPickerInfo(index, this)
-                    mViewModel.currentSelectedItemInfo[index] =
-                        generatePickerInfoFunc.itemData(initialIndex)
-                }
-            }
+            mutableStateListOf(*adapter.initialIndexes.asList().toTypedArray())
         }
 
         val generateJWheelPickerInfo: (wheelIndex: Int) -> JWheelPickerInfo = remember {
@@ -139,12 +147,13 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
         }
 
         JMultiWheelPicker(
-            modifier = modifier.disableAllVerticalScroll(disableTouch),
+            modifier = modifier,
             wheelCount = adapter.wheelCount,
             generateJWheelPickerInfo = generateJWheelPickerInfo,
             drawOverLay = rememberDefaultOverlayStyle(requiredData.overlayStyle),
             key = key,
-            onSelectedItemChanged = onSelectedItemChanged
+            onSelectedItemChanged = onSelectedItemChanged,
+            selectedTextColor = requiredData.getDesireSelectTextColor(LocalContext.current),
         )
     }
 
@@ -155,10 +164,11 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
             fragmentManager: FragmentManager,
             requiredData: JMultiPickerDialogData,
             tag: String = TAG,
-        ): JMultiplePickerDialogFragment? {
-            if (fragmentManager.findFragmentByTag(tag) != null) {
+        ): JMultiplePickerDialogFragment {
+            val existFragment = fragmentManager.findFragmentByTag(tag)
+            if (existFragment is JMultiplePickerDialogFragment) {
                 Log.d(TAG, "JMultiplePicker with tag $tag exist")
-                return null
+                return existFragment
             }
             return JMultiplePickerDialogFragment().apply {
                 if (arguments == null) {

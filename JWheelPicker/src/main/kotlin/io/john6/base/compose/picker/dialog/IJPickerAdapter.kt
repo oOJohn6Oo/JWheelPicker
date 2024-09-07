@@ -1,4 +1,4 @@
-package io.john6.base.compose.picker.dialog.multiple
+package io.john6.base.compose.picker.dialog
 
 import android.os.Bundle
 import androidx.annotation.Keep
@@ -8,17 +8,17 @@ import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 /**
  * Adapter for generate data for [io.john6.base.compose.picker.JMultiWheelPicker]
  */
-interface IMultipleJPickerAdapter {
+interface IJPickerAdapter {
     val wheelCount: Int
-    val initialIndexes: Array<Int>
+    val initialIndexes: IntArray
     fun key(wheelIndex: Int, selectedIndexes: List<Int>): Any
     fun generateJWheelPickerInfo(wheelIndex: Int, selectedIndexes: List<Int>): JWheelPickerInfo
 
     companion object {
         fun create(
-            clazz: Class<out IMultipleJPickerAdapter>,
+            clazz: Class<out IJPickerAdapter>,
             args: Bundle? = null
-        ): IMultipleJPickerAdapter {
+        ): IJPickerAdapter {
             return try {
                 clazz.getDeclaredConstructor(Bundle::class.java).newInstance(args)
             } catch (e: Exception) {
@@ -31,11 +31,12 @@ interface IMultipleJPickerAdapter {
 /**
  * Just a Demo Adapter
  */
-class TestMultipleJPickerAdapter: IMultipleJPickerAdapter {
+class TestMultipleJPickerAdapter @Keep constructor(val args: Bundle) : IJPickerAdapter {
+
     override val wheelCount: Int
-        get() = 2
-    override val initialIndexes: Array<Int>
-        get() = arrayOf(6, 6)
+        get() = args.getInt("wheelCount", 2)
+    override val initialIndexes: IntArray
+        get() = args.getIntArray("initialIndexes") ?: intArrayOf(6, 6)
 
     override fun key(wheelIndex: Int, selectedIndexes: List<Int>): Any {
         return if (wheelIndex == 0) {

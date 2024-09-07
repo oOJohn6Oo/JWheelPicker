@@ -2,6 +2,8 @@ package io.john6.base.compose.picker
 
 import androidx.annotation.IntDef
 
-@IntDef(value = [JWheelPickerHelper.overlayStyleOvalRectangle, JWheelPickerHelper.overlayStyleLine])
-@Retention(AnnotationRetention.RUNTIME)
+@IntDef(
+    value = [JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE, JWheelPickerHelper.OVERLAY_STYLE_LINE]
+)
+@Retention(AnnotationRetention.SOURCE)
 annotation class JPickerOverlayStyle

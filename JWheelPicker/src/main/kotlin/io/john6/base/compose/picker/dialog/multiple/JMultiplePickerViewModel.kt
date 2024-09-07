@@ -3,11 +3,13 @@ package io.john6.base.compose.picker.dialog.multiple
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.dialog.IJPickerAdapter
 
 class JMultiplePickerViewModel(savedStateHandle: SavedStateHandle) :ViewModel(){
-    val requiredData: JMultiPickerDialogData = savedStateHandle.get<JMultiPickerDialogData>("data")!!
+    val requiredData: JMultiPickerDialogData =
+        savedStateHandle["data"] ?: throw IllegalArgumentException("data is required")
 
-    val mMultipleJPickerAdapter = IMultipleJPickerAdapter.create(
+    val mMultipleJPickerAdapter = IJPickerAdapter.create(
         requiredData.adapterClass,
         requiredData.adapterParamsAsBundle
     )

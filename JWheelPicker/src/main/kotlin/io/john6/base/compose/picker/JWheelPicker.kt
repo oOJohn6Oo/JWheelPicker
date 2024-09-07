@@ -1,6 +1,7 @@
 package io.john6.base.compose.picker
 
 import android.view.HapticFeedbackConstants
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -51,8 +52,6 @@ import androidx.compose.ui.unit.sp
 import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.base.compose.picker.bean.getText
-import io.john6.base.compose.ui.JUtil.disableParentNestedVerticalScroll
-import io.john6.base.compose.ui.rememberJMaxScrollFlingBehavior
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -164,9 +163,11 @@ fun JWheelPicker(
         with(density) { edgeOffsetPx.absoluteValue.toDp() }
     }
 
-    LaunchedEffect(key1 = itemCount == 0) {
-        if (itemCount == 0) {
+    LaunchedEffect(key1 = itemCount){
+        if(itemCount == 0){
             onSelectedItemChanged?.invoke(JWheelPickerItemInfo.EMPTY)
+        }else{
+            onSelectedItemChanged?.invoke(itemData(initialIndex))
         }
     }
 
@@ -186,33 +187,27 @@ fun JWheelPicker(
         }
     }
 
-    val performHapticFeedback = remember {
-        {
-            if (enableHapticFeedback) {
-                scope.launch {
-                    localView.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
-                }
+    val performHapticFeedback = {
+        if (enableHapticFeedback) {
+            scope.launch {
+                localView.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
             }
         }
     }
 
-    val getLayoutInfo = remember {
-        {
-            lazyListState.layoutInfo
-        }
+    val getLayoutInfo =  {
+        lazyListState.layoutInfo
     }
 
 
     // 最终文字样式
     val desireTextStyle: (Int) -> TextStyle = if(selectedTextColor == Color.Unspecified){
         // 未设置选中文字颜色，则直接为不可变的方法
-        remember {
-            {
-                textStyle
-            }
+        {
+            textStyle
         }
     }else{ // 设置了选中文字颜色，则需要根据选中下标判断是否需要变色
-        remember(currentSelectedItemIndex, selectedTextColor, textStyle.color) {
+        remember(initialIndex, currentSelectedItemIndex, selectedTextColor, textStyle.color) {
             {
                 val finalColor = if (it != currentSelectedItemIndex) {
                     textStyle.color
@@ -229,6 +224,7 @@ fun JWheelPicker(
     var hasPerformHapticFeedback by remember {
         mutableStateOf(true)
     }
+
     CompositionLocalProvider(
         LocalOverscrollConfiguration provides null
     ) {
@@ -242,7 +238,7 @@ fun JWheelPicker(
                         drawOverLay?.invoke(this, itemHeightPx, edgeOffsetPx)
                     },
                 state = lazyListState,
-                flingBehavior = rememberJMaxScrollFlingBehavior(4000f),
+//                flingBehavior = rememberJMaxScrollFlingBehavior(4000f),
                 contentPadding = PaddingValues(vertical = edgeOffsetDp),
             ) {
                 items(itemCount, key = { itemData(it) }) {
@@ -265,7 +261,7 @@ fun JWheelPicker(
                         drawOverLay?.invoke(this, itemHeightPx, edgeOffsetPx)
                     },
                 state = lazyListState,
-                flingBehavior = rememberJMaxScrollFlingBehavior(4000f),
+//                flingBehavior = rememberJMaxScrollFlingBehavior(4000f),
                 contentPadding = PaddingValues(horizontal = edgeOffsetDp),
             ) {
                 items(itemCount, key = { itemData(it) }) {
@@ -321,7 +317,10 @@ private fun VerticalWheelPickerItem(
         .fillMaxWidth()
         .height(itemHeightDp)
         .graphicsLayer {
-            render3DVerticalItemEffect(index, getLayoutInfo)
+            render3DVerticalItemEffect(
+                index,
+                getLayoutInfo
+            )
         }) {
         Text(
             text = text,
@@ -387,7 +386,8 @@ private fun GraphicsLayerScope.render3DVerticalItemEffect(
 
     rotationX = -90 * offset
 
-    scaleX = 1 - (offset.absoluteValue).pow(2) * 0.37f
+    val scale = 1 - (offset.absoluteValue).pow(2) * 0.37f
+    scaleX = scale
 
     translationY = if (offset == 0f) {
         0f
@@ -396,7 +396,7 @@ private fun GraphicsLayerScope.render3DVerticalItemEffect(
         val r = (2f * centerY / Math.PI).toFloat()
         // 视觉上的 Y 的坐标位置
         val h =
-            (sin(Math.toRadians(offset.absoluteValue * 90.0)) * r * 1.24).toFloat()
+            (sin(Math.toRadians(offset.absoluteValue * 90.0)) * r * JWheelPickerHelper.defaultVerticalWheelCurveRate).toFloat()
         val diffY = if (offset < 0) {
             (centerY - h.absoluteValue) - posY.absoluteValue
         } else {
@@ -427,7 +427,8 @@ private fun GraphicsLayerScope.render3DHorizontalItemEffect(
 
     rotationY = -90 * offset
 
-    scaleY = 1 - (offset.absoluteValue).pow(2) * 0.37f
+    val scale = 1 - (offset.absoluteValue).pow(2) * 0.37f
+    scaleY = scale
 
     translationX = if (offset == 0f) {
         0f
@@ -436,7 +437,7 @@ private fun GraphicsLayerScope.render3DHorizontalItemEffect(
         val r = (2f * centerX / Math.PI).toFloat()
         // 视觉上的 Y 的坐标位置
         val h =
-            (sin(Math.toRadians(offset.absoluteValue * 90.0)) * r * 1.24).toFloat()
+            (sin(Math.toRadians(offset.absoluteValue * 90.0)) * r * JWheelPickerHelper.defaultHorizontalWheelCurveRate).toFloat()
         val diffX = if (offset > 0) {
             (centerX - h.absoluteValue) - posX.absoluteValue
         } else {
@@ -481,6 +482,21 @@ private fun Modifier.disableParentNestedHorizontalScroll(disabled: Boolean = tru
     if (disabled) this.nestedScroll(HorizontalParentScrollConsumer) else this
 
 private val HorizontalParentScrollConsumer = object : NestedScrollConnection {
+
+    override suspend fun onPostFling(consumed: Velocity, available: Velocity) = available
+
+    override fun onPostScroll(
+        consumed: Offset,
+        available: Offset,
+        source: NestedScrollSource
+    ): Offset = available
+}
+
+
+private fun Modifier.disableParentNestedVerticalScroll(disabled: Boolean = true) =
+    if (disabled) this.nestedScroll(VerticalParentScrollConsumer) else this
+
+private val VerticalParentScrollConsumer = object : NestedScrollConnection {
 
     override suspend fun onPostFling(consumed: Velocity, available: Velocity) = available
 

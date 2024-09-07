@@ -1,32 +1,21 @@
 package io.john6.demo.wheelpicker
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.Window
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
-import io.john6.base.compose.JAppTheme
-import io.john6.base.compose.picker.JWheelPicker
-import io.john6.base.compose.picker.JWheelPickerArrangement
 import io.john6.base.compose.picker.JWheelPickerHelper
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
@@ -34,47 +23,80 @@ import io.john6.base.compose.picker.dialog.date.JDatePickerDialogData
 import io.john6.base.compose.picker.dialog.date.JDateWheelPickerDialogFragment
 import io.john6.base.compose.picker.dialog.multiple.JMultiPickerDialogData
 import io.john6.base.compose.picker.dialog.multiple.JMultiplePickerDialogFragment
-import io.john6.base.compose.picker.dialog.multiple.TestMultipleJPickerAdapter
+import io.john6.base.compose.picker.dialog.TestMultipleJPickerAdapter
+import io.john6.base.compose.picker.dialog.single.JSinglePickerDialogAdapterData
 import io.john6.base.compose.picker.dialog.single.JSinglePickerDialogData
 import io.john6.base.compose.picker.dialog.single.JSinglePickerDialogFragment
-import io.john6.base.compose.spaceLarge
 import java.io.Serializable
 import java.time.LocalDateTime
 
 class JWheelPickerDemoActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setupWindow()
         setContentView(ComposeView(this).apply {
             setContent {
+                val isDarkTheme = isSystemInDarkTheme()
+                val view = LocalView.current
+                LaunchedEffect(isDarkTheme) {
+                    view.context.findWindow()?.apply {
+                        WindowCompat.getInsetsController(this, view).apply {
+                            isAppearanceLightStatusBars = !isDarkTheme
+                            isAppearanceLightNavigationBars = !isDarkTheme
+                        }
+                    }
+                }
                 DemoComposeScreen(
                     showSinglePicker = this@JWheelPickerDemoActivity::showSinglePicker,
                     showMultiplePicker = this@JWheelPickerDemoActivity::showMultiplePicker,
-                    showDatePicker = this@JWheelPickerDemoActivity::showDatePicker
+                    showDatePicker = this@JWheelPickerDemoActivity::showDatePicker,
+                    showMonthDayPicker = this@JWheelPickerDemoActivity::ShowMonthDayPicker,
                 )
             }
         })
 
-        supportFragmentManager.setFragmentResultListener(
-            JSinglePickerDialogFragment.TAG,
-            this
-        ) { _, bundle ->
+        JWheelPickerHelper.DefaultTheme = {
+            MaterialTheme(shapes = Shapes, content = it)
+        }
+
+        initListener()
+    }
+
+    private fun setupWindow() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isStatusBarContrastEnforced = false
+            window.isNavigationBarContrastEnforced = false
+        }
+    }
+
+    private fun initListener() {
+        supportFragmentManager.setFragmentResultListener(JSinglePickerDialogFragment.TAG, this) { tag, bundle ->
+            val isDismiss = bundle.getBoolean("dismiss", false)
+            if(isDismiss){
+                return@setFragmentResultListener
+            }
             val result = bundle.getParcelableCompat(fragmentResultKey, JWheelPickerItemInfo::class.java)
             Toast.makeText(this, result?.id.toString(), Toast.LENGTH_SHORT).show()
         }
-        supportFragmentManager.setFragmentResultListener(
-            JMultiplePickerDialogFragment.TAG,
-            this
-        ) { _, bundle ->
+        supportFragmentManager.setFragmentResultListener(JMultiplePickerDialogFragment.TAG, this) { tag, bundle ->
+            val isDismiss = bundle.getBoolean("dismiss", false)
+            if(isDismiss){
+                return@setFragmentResultListener
+            }
             val result = bundle.getParcelableArrayCompat(fragmentResultKey, JWheelPickerItemInfo::class.java)
             Toast.makeText(this, result?.joinToString { it.id }, Toast.LENGTH_SHORT)
                 .show()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            supportFragmentManager.setFragmentResultListener(
-                JDateWheelPickerDialogFragment.TAG,
-                this
-            ) { _, bundle ->
+            supportFragmentManager.setFragmentResultListener(JDateWheelPickerDialogFragment.TAG, this) { tag, bundle ->
+                val isDismiss = bundle.getBoolean("dismiss", false)
+                if(isDismiss){
+                    return@setFragmentResultListener
+                }
                 val result = bundle.getSerializableCompat(fragmentResultKey, LocalDateTime::class.java)
                 Toast.makeText(this, result.toString(), Toast.LENGTH_SHORT)
                     .show()
@@ -82,22 +104,32 @@ class JWheelPickerDemoActivity : FragmentActivity() {
         }
     }
 
-    private fun showSinglePicker() {
-        JSinglePickerDialogFragment.show(
-            supportFragmentManager,
-            requiredData = JSinglePickerDialogData(
-                title = 0 to "SinglePicker",
-                initialIndex = 2,
-                dataList = ArrayList((0..3).map {
-                    JWheelPickerItemInfo(
-                        it.toString(),
-                        it,
-                        "item$it"
-                    )
-                }),
-                overlayStyle = JWheelPickerHelper.overlayStyleOvalRectangle
-            ),
-        )
+    private fun showSinglePicker(withAdapter: Boolean = false) {
+        if (withAdapter) {
+            JSinglePickerDialogFragment.show(
+                supportFragmentManager,
+                requiredData = JSinglePickerDialogAdapterData(
+                    title = 0 to "SingleAdapterPicker",
+                    overlayStyle = JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE,
+                    selectTextColorResId = android.R.color.holo_blue_dark,
+                    adapterClass = TestMultipleJPickerAdapter::class.java,
+                    adapterParamsAsBundle = Bundle().apply {
+                        putInt("wheelCount", 1)
+                        putIntArray("initialIndexes", intArrayOf(9))
+                    },
+                ),
+            )
+        } else {
+            JSinglePickerDialogFragment.show(
+                supportFragmentManager,
+                requiredData = JSinglePickerDialogData(
+                    title = 0 to "SinglePicker",
+                    initialIndex = 20,
+                    dataList = (0..30).map { JWheelPickerItemInfo(it.toString(), it, "item$it") },
+                    overlayStyle = JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE
+                ),
+            )
+        }
     }
 
     private fun showMultiplePicker() {
@@ -105,10 +137,35 @@ class JWheelPickerDemoActivity : FragmentActivity() {
             supportFragmentManager,
             requiredData = JMultiPickerDialogData(
                 title = 0 to "MultiplePicker",
-                overlayStyle = JWheelPickerHelper.overlayStyleOvalRectangle,
-                adapterClass = TestMultipleJPickerAdapter::class.java
+                overlayStyle = JWheelPickerHelper.OVERLAY_STYLE_LINE,
+                adapterClass = TestMultipleJPickerAdapter::class.java,
             ),
         )
+    }
+
+    private fun ShowMonthDayPicker() {
+        JMultiplePickerDialogFragment.show(
+            supportFragmentManager,
+            requiredData = JMultiPickerDialogData(
+                title = 0 to "MonthDayPicker",
+                overlayStyle = JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE,
+                adapterClass = MonthDayPickerAdapter::class.java,
+                adapterParamsAsBundle = Bundle().apply {
+                    val currentMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        LocalDateTime.now().monthValue - 1
+                    } else {
+                        8 - 1
+                    }
+                    val currentDay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        LocalDateTime.now().dayOfMonth - 1
+                    } else {
+                        8 - 1
+                    }
+                    putIntArray("initialIndexes", intArrayOf(currentMonth, currentDay))
+                }
+            ),
+        )
+
     }
 
     private fun showDatePicker() {
@@ -117,7 +174,7 @@ class JWheelPickerDemoActivity : FragmentActivity() {
                 supportFragmentManager,
                 requiredData = JDatePickerDialogData(
                     title = 0 to "DatePicker",
-                    overlayStyle = JWheelPickerHelper.overlayStyleOvalRectangle,
+                    overlayStyle = JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE,
                     containerHorizontalPaddingInDp = 16
                 ),
             )
@@ -159,67 +216,12 @@ class JWheelPickerDemoActivity : FragmentActivity() {
             getParcelableArray(key) as? Array<T>
         }
     }
-}
 
-@Composable
-private fun DemoComposeScreen(
-    showSinglePicker: () -> Unit,
-    showMultiplePicker: () -> Unit,
-    showDatePicker: () -> Unit
-) {
-    JAppTheme {
-        LazyColumn(
-            modifier = Modifier
-                .background(MaterialTheme.colors.background)
-                .fillMaxSize(),
-            contentPadding = WindowInsets.safeDrawing
-                .asPaddingValues()
-        ) {
-            item {
-                Button(onClick = showSinglePicker) {
-                    Text(text = "Show Single Picker")
-                }
-            }
-            item {
-                Button(onClick = showMultiplePicker) {
-                    Text(text = "Show Multiple Picker")
-                }
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                item {
-                    Button(onClick = showDatePicker) {
-                        Text(text = "Show Date Picker")
-                    }
-                }
-            }
-
-            item() {
-                Box(modifier = Modifier.fillMaxWidth()){
-                    JWheelPicker(modifier = Modifier.align(Alignment.Center),
-                        size = 300.dp,
-                        itemTextList = (0..10).map {
-                            JWheelPickerItemInfo(
-                                it.toString(),
-                                it,
-                                "item$it"
-                            ) },
-                        drawOverLay = null,
-                        arrangement = JWheelPickerArrangement.Horizontal,
-                        itemWidthDp = 60.dp,
-                        selectedTextColor = MaterialTheme.colors.primary
-                    )
-                }
-            }
-
-            items(50) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = MaterialTheme.spaceLarge)
-                ) {
-                    Text(text = "Demo Compose Screen", color = MaterialTheme.colors.onBackground)
-                }
-            }
+    private fun Context.findWindow(): Window? {
+        return when (this) {
+            is Activity -> window
+            is ContextWrapper -> baseContext.findWindow()
+            else -> null
         }
     }
 }

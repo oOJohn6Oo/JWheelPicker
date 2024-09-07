@@ -1,8 +1,8 @@
 package io.john6.base.compose.picker.dialog.single
 
-import android.os.Parcelable
 import io.john6.base.compose.picker.JPickerOverlayStyle
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.dialog.JPickerDialogBaseData
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -15,12 +15,13 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class JSinglePickerDialogData(
-    val title: Pair<Int, String> = 0 to "",
+    override val title: Pair<Int, String> = 0 to "",
+    @JPickerOverlayStyle
+    override val overlayStyle: Int = 0,
+    override val selectTextColorResId: Int = 0,
     val initialIndex: Int = 0,
     val dataList: List<JWheelPickerItemInfo> = emptyList(),
-    @JPickerOverlayStyle
-    val overlayStyle: Int = 0,
-) : Parcelable {
+) : JPickerDialogBaseData() {
     /**
      * Prevent initialIndex negative or  out of range
      */

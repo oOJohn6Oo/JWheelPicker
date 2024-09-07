@@ -2,6 +2,12 @@ package io.john6.base.compose.picker
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.material.Colors
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
+import androidx.compose.material.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.intl.Locale
 import io.john6.base.compose.picker.bean.JWheelPickerInfo
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
@@ -301,10 +307,8 @@ object JDatePickerHelper {
 //</editor-fold>
 
     //<editor-fold desc="Formatter related">
-    var defaultMonthFormatter by lazyMutable {
-        DateTimeFormatterBuilder().appendText(ChronoField.MONTH_OF_YEAR, TextStyle.SHORT)
-            .toFormatter(java.util.Locale.getDefault())
-    }
+    var defaultMonthFormatter = DateTimeFormatterBuilder().appendText(ChronoField.MONTH_OF_YEAR, TextStyle.SHORT)
+        .toFormatter(java.util.Locale.getDefault())
 
     fun getMonthDisplayText(LocalDateTime: LocalDateTime, language: String): String {
         if (!language.equals(defaultMonthFormatter.locale.language, true)) {

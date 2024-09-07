@@ -5,9 +5,7 @@
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarDividerColor" ns1:targetApi="o_mr1">
-            @android:color/transparent
-        </item>
+        <item name="android:navigationBarDividerColor" ns1:targetApi="o_mr1">@android:color/transparent</item>
         <item name="android:enforceNavigationBarContrast" ns1:targetApi="q">false</item>
         <item name="android:enforceStatusBarContrast" ns1:targetApi="q">false</item>
 

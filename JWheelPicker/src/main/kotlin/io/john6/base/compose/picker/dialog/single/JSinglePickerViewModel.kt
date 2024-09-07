@@ -3,6 +3,8 @@ package io.john6.base.compose.picker.dialog.single
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
+import io.john6.base.compose.picker.dialog.IJPickerAdapter
+import io.john6.base.compose.picker.dialog.JPickerDialogBaseData
 
 /**
  * Special ViewModel for PickerDialog
@@ -13,11 +15,8 @@ import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
  */
 class JSinglePickerViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    val requiredData: JSinglePickerDialogData =
+    val requiredData: JPickerDialogBaseData =
         savedStateHandle["data"] ?: throw IllegalArgumentException("data is required")
 
-    var currentSelectedItemInfo: JWheelPickerItemInfo = requiredData.dataList.getOrNull(
-        requiredData.getSafeInitialIndex()
-    ) ?: JWheelPickerItemInfo.EMPTY
-
+    var currentSelectedItemInfo = JWheelPickerItemInfo.EMPTY
 }

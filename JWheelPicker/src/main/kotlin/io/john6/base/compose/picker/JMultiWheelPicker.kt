@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
@@ -42,6 +43,7 @@ fun JMultiWheelPicker(
     containerHorizontalPadding: Dp = 0.dp,
     enableHapticFeedback: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
+    selectedTextColor: Color = Color.Unspecified,
     hapticFeedBackYThreshold: Float = 20f,
     wheelCount: Int,
     drawOverLay: (ContentDrawScope.(itemHeightPx: Int, edgeOffsetYPx: Float) -> Unit)? = { itemHeightPx, edgeOffsetYPx ->
@@ -72,6 +74,7 @@ fun JMultiWheelPicker(
                 wheelIndex = wheelIndex,
                 itemVerticalPadding = itemVerticalPadding,
                 enableHapticFeedback = enableHapticFeedback,
+                selectedTextColor = selectedTextColor,
                 textStyle = textStyle,
                 confirmSelectYThreshold = hapticFeedBackYThreshold,
                 onSelectedItemChanged = onSelectedItemChanged,
@@ -97,6 +100,7 @@ private fun RowScope.ItemWheelPicker(
     enableHapticFeedback: Boolean,
     textStyle: TextStyle,
     confirmSelectYThreshold: Float,
+    selectedTextColor: Color = Color.Unspecified,
     key: (wheelIndex: Int) -> Any,
     onSelectedItemChanged: (JWheelPickerInfo, JWheelPickerItemInfo) -> Unit,
     generatePickerData: (wheelIndex: Int) -> JWheelPickerInfo
@@ -111,6 +115,7 @@ private fun RowScope.ItemWheelPicker(
         itemPadding = itemVerticalPadding,
         enableHapticFeedback = enableHapticFeedback,
         textStyle = textStyle,
+        selectedTextColor = selectedTextColor,
         confirmSelectDistanceThreshold = confirmSelectYThreshold,
         itemCount = pickerData.itemCount,
         itemData = pickerData.itemData,

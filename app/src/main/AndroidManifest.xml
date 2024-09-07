@@ -9,12 +9,11 @@
         android:label="@string/app_name"
         android:resizeableActivity="true"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/Theme.John.BaseTheme.DayNight.AppTheme"
         android:supportsRtl="true"
         tools:ignore="AllowBackup"
         tools:targetApi="tiramisu">
         <activity
-            android:configChanges="screenLayout|screenSize|orientation|keyboardHidden|keyboard|navigation"
+            android:configChanges="screenLayout|screenSize|orientation|keyboardHidden|keyboard|navigation|uiMode"
             android:name=".JWheelPickerDemoActivity"
             android:exported="true">
             <intent-filter>
