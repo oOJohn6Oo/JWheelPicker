@@ -27,19 +27,23 @@
 
 ##### For Any Compose View Use
 
-https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/single/JSinglePickerDialogFragment.kt#L100-L110
+https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e699d58d3/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/single/JSinglePickerDialogFragment.kt#L153-L164
 
-https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/multiple/JMultiplePickerDialogFragment.kt#L136-L143
+https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e699d58d3/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/multiple/JMultiplePickerDialogFragment.kt#L149-L157
 
-https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/date/JDateWheelPickerDialogFragment.kt#L114-L124
+https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e699d58d3/JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/date/JDateWheelPickerDialogFragment.kt#L123-L134
 
 ##### For Default BottomSheet Dialog Use
 
-https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L80-L96
+https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e699d58d3/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L110-L133
 
-https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L98-L107
+https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e699d58d3/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L136-L143
 
-https://github.com/oOJohn6Oo/JWheelPicker/blob/c061499f2c4eb9f44e566f598246144e5aba3cbe/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L109-L119
+https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e699d58d3/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L173-L180
+
+And using FragmentResult API to get the callback
+
+https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e699d58d3/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L77-L84
 
 [LatestVersion]: https://jitpack.io/v/oOJohn6Oo/JWheelPicker.svg
 [JWheelPicker]: ./JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/JWheelPicker.kt
