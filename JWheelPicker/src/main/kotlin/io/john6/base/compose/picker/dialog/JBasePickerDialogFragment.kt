@@ -12,15 +12,9 @@ import androidx.activity.BackEventCompat
 import androidx.activity.ComponentDialog
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalElevationOverlay
@@ -36,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
@@ -43,13 +38,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
+import io.john6.base.compose.jwheelpicker.R
 import io.john6.base.compose.picker.JPickerOverlayStyle
 import io.john6.base.compose.picker.JWheelPickerHelper
 import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerLineOverlay
 import io.john6.base.compose.picker.JWheelPickerHelper.drawPickerRectOverlay
-import io.john6.base.jwheelpicker.R
 import jSurfaceColorAtElevation
-import onlyBottomSafeDrawing
 import android.graphics.Color as androidColor
 
 /**
@@ -134,10 +128,18 @@ abstract class JBasePickerDialogFragment : DialogFragment() {
     @Composable
     abstract fun ContentView()
 
+    /**
+     * @param title took the center slot
+     * @param confirmImgVector took the right side slot, 1 priority
+     * @param confirmImgPainter took the right side slot, 2 priority
+     * @param confirmText took the right side slot, 3 priority, never null, will be the description of the icon
+     */
     @Composable
-    internal open fun DefaultPickerHeader(
+    internal fun DefaultPickerHeader(
         title: String,
-        imageVector: ImageVector,
+        confirmImgVector: ImageVector? = null,
+        confirmImgPainter: Painter? = null,
+        confirmText: String = stringResource(android.R.string.ok),
         onSubmit: () -> Unit
     ) {
         Box(
@@ -156,7 +158,25 @@ abstract class JBasePickerDialogFragment : DialogFragment() {
                 )
             )
             IconButton(onClick = onSubmit, modifier = Modifier.align(Alignment.CenterEnd)) {
-                Icon(imageVector = imageVector, contentDescription = "Submit")
+                if (confirmImgVector != null) {
+                    Icon(
+                        imageVector = confirmImgVector,
+                        contentDescription = confirmText,
+                        tint = MaterialTheme.colors.primary
+                    )
+                } else if (confirmImgPainter != null) {
+                    Icon(
+                        painter = confirmImgPainter,
+                        contentDescription = confirmText,
+                        tint = MaterialTheme.colors.primary
+                    )
+                } else {
+                    Text(
+                        text = confirmText,
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.primary
+                    )
+                }
             }
         }
     }

@@ -108,10 +108,10 @@ fun JWheelPicker(
 /**
  * iOS style data picker
  *
- * @param enableHapticFeedback 是否启用震动
- * @param confirmSelectDistanceThreshold  标识 Item 选中范围
+ * @param enableHapticFeedback vibrate using [android.view.View.performHapticFeedback]
+ * @param confirmSelectDistanceThreshold  item will be selected while item centerY in [picker center - this , picker center + this]
  * @param itemCount 可滚动的 Item 数量
- * @param itemData 通过下标获取 Item 具体数据 [JWheelPickerItemInfo]
+ * @param itemData a function which take a index param return a [JWheelPickerItemInfo]
  *
  */
 @OptIn(ExperimentalFoundationApi::class)
@@ -190,7 +190,9 @@ fun JWheelPicker(
     val performHapticFeedback = {
         if (enableHapticFeedback) {
             scope.launch {
-                localView.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+                if (!localView.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)) {
+                    localView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                }
             }
         }
     }
@@ -305,6 +307,15 @@ fun JWheelPicker(
 
 }
 
+/**
+ * Render a Item of each Picker
+ *
+ * @param index index of this item, use this to know if this item is visible or not
+ * @param text text shows inside this item
+ * @param itemHeightDp height of this item
+ * @param textStyle text style of this item
+ * @param getLayoutInfo get this layoutInfo of this LazyList
+ */
 @Composable
 private fun VerticalWheelPickerItem(
     index: Int,
@@ -363,7 +374,7 @@ private fun HorizontalWheelPickerItem(
 }
 
 /**
- * Item 3D 效果
+ * Implementation of a 3D item, do rotationX, scaleX and translationY to this GraphicsLayer
  */
 private fun GraphicsLayerScope.render3DVerticalItemEffect(
     index: Int,

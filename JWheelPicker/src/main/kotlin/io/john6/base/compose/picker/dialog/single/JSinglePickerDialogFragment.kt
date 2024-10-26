@@ -3,32 +3,20 @@ package io.john6.base.compose.picker.dialog.single
 import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
@@ -36,9 +24,8 @@ import androidx.lifecycle.ViewModelProvider
 import io.john6.base.compose.picker.JWheelPicker
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
-import io.john6.base.compose.picker.dialog.IJPickerAdapter
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
-import io.john6.base.jwheelpicker.R
+import io.john6.base.compose.jwheelpicker.R
 import onlyBottomSafeDrawing
 
 /**
@@ -113,7 +100,7 @@ open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
         Column(modifier = Modifier.onlyBottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
-                imageVector = Icons.AutoMirrored.Filled.Send,
+                confirmImgPainter = painterResource(R.drawable.ic_done_24dp_from_j_picker),
                 onSubmit = this@JSinglePickerDialogFragment::onSubmit
             )
 
