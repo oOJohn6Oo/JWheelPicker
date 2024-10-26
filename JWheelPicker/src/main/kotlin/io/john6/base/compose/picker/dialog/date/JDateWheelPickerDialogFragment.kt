@@ -9,17 +9,15 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
+import io.john6.base.compose.jwheelpicker.R
 import io.john6.base.compose.picker.JDateWheelPicker
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
@@ -83,7 +81,7 @@ open class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
         Column(modifier = Modifier.onlyBottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
-                imageVector = Icons.AutoMirrored.Filled.Send,
+                confirmImgPainter = painterResource(R.drawable.ic_done_24dp_from_j_picker),
                 onSubmit = this@JDateWheelPickerDialogFragment::onSubmit
             )
 

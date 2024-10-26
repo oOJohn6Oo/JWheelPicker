@@ -7,15 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +22,7 @@ import io.john6.base.compose.picker.bean.JWheelPickerInfo
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.base.compose.picker.dialog.IJPickerAdapter
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
+import io.john6.base.compose.jwheelpicker.R
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -83,7 +81,7 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
         Column(modifier = Modifier.onlyBottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
-                imageVector = Icons.AutoMirrored.Filled.Send,
+                confirmImgPainter = painterResource(R.drawable.ic_done_24dp_from_j_picker),
                 onSubmit = this@JMultiplePickerDialogFragment::onSubmit
             )
 
