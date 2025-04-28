@@ -2,6 +2,8 @@ package io.john6.base.compose.picker.dialog.date
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import io.john6.base.compose.picker.DatePickerMode
 import io.john6.base.compose.picker.JPickerOverlayStyle
 import io.john6.base.compose.picker.TimePickerMode
@@ -29,7 +31,8 @@ data class JDatePickerDialogData(
     override val title: Pair<Int, String> = 0 to "",
     @JPickerOverlayStyle
     override val overlayStyle: Int = 0,
-    override val selectTextColorResId: Int = 0,
+    override val selectTextColor: @Composable () -> Color,
+    override val isDraggable: Boolean = true,
     val containerHorizontalPaddingInDp: Int = 0,
     @DatePickerMode val datePickerMode: Int = DatePickerMode.DATE_ALL,
     @TimePickerMode val timePickerMode: Int = TimePickerMode.TIME_ALL,

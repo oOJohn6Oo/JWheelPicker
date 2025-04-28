@@ -128,7 +128,7 @@ open class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
             initialSelectDateTime = requiredData.initialSelectDateTime,
             drawOverLay = rememberDefaultOverlayStyle(requiredData.overlayStyle),
             onSelectedTimeChanged = onSelectedTimeChanged,
-            selectedTextColor = requiredData.getDesireSelectTextColor(LocalContext.current),
+            selectedTextColor = requiredData.selectTextColor(),
         )
     }
 

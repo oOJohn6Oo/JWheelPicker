@@ -84,6 +84,7 @@ open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
             this,
             SavedStateViewModelFactory(null, this, arguments)
         )[JSinglePickerViewModel::class.java]
+        isDraggable = mViewModel.requiredData.isDraggable
     }
 
     override fun onSubmit() {
@@ -141,7 +142,7 @@ open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
             modifier = modifier,
             onSelectedItemChanged = onSelectedItemChanged,
             textStyle = TextStyle(color = MaterialTheme.colors.onBackground, fontSize = 20.sp),
-            selectedTextColor = requiredData.getDesireSelectTextColor(LocalContext.current),
+            selectedTextColor = requiredData.selectTextColor(),
             drawOverLay = rememberDefaultOverlayStyle(requiredData.overlayStyle),
             initialIndex = requiredData.getSafeInitialIndex(),
             itemCount = requiredData.dataList.size,
@@ -177,7 +178,7 @@ open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
             onSelectedItemChanged = onSelectedItemChanged,
             textStyle = TextStyle(color = MaterialTheme.colors.onBackground, fontSize = 20.sp),
             drawOverLay = rememberDefaultOverlayStyle(requiredData.overlayStyle),
-            selectedTextColor = requiredData.getDesireSelectTextColor(LocalContext.current),
+            selectedTextColor = requiredData.selectTextColor(),
             initialIndex = currentSelectedIndex,
             itemCount = pickerData.itemCount,
             itemData = pickerData.itemData,

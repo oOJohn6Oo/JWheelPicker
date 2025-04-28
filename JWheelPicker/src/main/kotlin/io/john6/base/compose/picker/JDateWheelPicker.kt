@@ -39,7 +39,7 @@ import java.time.ZoneOffset
  *
  *
  * @param enableHapticFeedback 是否启用震动
- * @param hapticFeedBackYThreshold  在可震动 OffsetY 范围
+ * @param hapticFeedbackYThreshold  在可震动 OffsetY 范围
  * @param datePickerMode 需要的日期格式，参考[DatePickerMode]
  * @param timePickerMode 需要的时间格式，参考[TimePickerMode]
  * @param drawOverLay 遮罩层样式，可使用 [JWheelPickerHelper] 中的工具方法快速定制
@@ -60,7 +60,7 @@ fun JDateWheelPicker(
     enableHapticFeedback: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
     selectedTextColor: Color = Color.Unspecified,
-    hapticFeedBackYThreshold: Float = 20f,
+    hapticFeedbackYThreshold: Float = 20f,
     @DatePickerMode datePickerMode: Int,
     @TimePickerMode timePickerMode: Int,
     startLocalDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC),
@@ -172,7 +172,7 @@ fun JDateWheelPicker(
         enableHapticFeedback = enableHapticFeedback,
         textStyle = textStyle,
         selectedTextColor = selectedTextColor,
-        hapticFeedBackYThreshold = hapticFeedBackYThreshold,
+        hapticFeedbackYThreshold = hapticFeedbackYThreshold,
         wheelCount = wheelCount,
         generateJWheelPickerInfo = generateJWheelPickerInfo,
         key = getSelectedDateTimeKey,

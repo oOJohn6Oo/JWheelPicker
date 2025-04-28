@@ -151,7 +151,7 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
             drawOverLay = rememberDefaultOverlayStyle(requiredData.overlayStyle),
             key = key,
             onSelectedItemChanged = onSelectedItemChanged,
-            selectedTextColor = requiredData.getDesireSelectTextColor(LocalContext.current),
+            selectedTextColor = requiredData.selectTextColor(),
         )
     }
 

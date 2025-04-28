@@ -3,7 +3,6 @@ package io.john6.base.compose.picker.dialog
 import JElevationOverlayInBothLightAndDarkMode
 import android.annotation.SuppressLint
 import android.content.DialogInterface
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,10 @@ import android.view.ViewGroup
 import androidx.activity.BackEventCompat
 import androidx.activity.ComponentDialog
 import androidx.activity.OnBackPressedCallback
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
@@ -25,7 +27,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +40,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
 import io.john6.base.compose.jwheelpicker.R
@@ -54,10 +62,15 @@ abstract class JBasePickerDialogFragment : DialogFragment() {
     private var bottomContainerBackHelper: JBottomContainerBackHelper? = null
     override fun getTheme() = R.style.JPickerDialogTheme
 
+    open var isDraggable by mutableStateOf(true)
+
     /**
-     * TODO to be implemented
+     * Set to null -> Click outside will first animate side out then dismiss
+     * Set to dismiss -> Click outside will directly dismiss
      */
-    private val isDraggable = true
+    open val onClickOutside: (()->Unit)? = {
+        dismiss()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,8 +91,7 @@ abstract class JBasePickerDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         dialog?.window?.apply {
             WindowCompat.setDecorFitsSystemWindows(this, false)
-            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            setBackgroundDrawable(ColorDrawable(androidColor.TRANSPARENT))
+            setBackgroundDrawable(androidColor.TRANSPARENT.toDrawable())
         }
         (dialog as? ComponentDialog)?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner,
@@ -110,15 +122,32 @@ abstract class JBasePickerDialogFragment : DialogFragment() {
                 dismiss()
             }
         }
+
         ModalBottomSheetLayout(
             sheetState = sheetState,
             sheetElevation = 1.dp,
+            sheetGesturesEnabled = isDraggable,
             sheetShape = MaterialTheme.shapes.large.copy(
                 bottomStart = CornerSize(0.dp),
                 bottomEnd = CornerSize(0.dp)
             ),
             scrimColor = Color.Transparent,
-            content = {},
+            content = {
+                // To trigger a fast dismiss
+                if (sheetState.currentValue != ModalBottomSheetValue.Hidden) {
+                    Box(
+                        Modifier
+                            .zIndex(if (onClickOutside == null) 0f else 10f)
+                            .fillMaxSize()
+                            .clickable(
+                                enabled = onClickOutside != null,
+                                indication = null,
+                                interactionSource = null,
+                                onClick = { onClickOutside?.invoke() },
+                            )
+                    )
+                }
+            },
             sheetContent = {
                 ContentView()
             },
@@ -155,7 +184,8 @@ abstract class JBasePickerDialogFragment : DialogFragment() {
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.align(
                     Alignment.Center
-                )
+                ),
+                fontWeight = FontWeight.Bold,
             )
             IconButton(onClick = onSubmit, modifier = Modifier.align(Alignment.CenterEnd)) {
                 if (confirmImgVector != null) {
@@ -203,7 +233,7 @@ abstract class JBasePickerDialogFragment : DialogFragment() {
         val overlayRadius = with(LocalDensity.current) { (8.dp).toPx() }
 
         val drawOverLay: (ContentDrawScope.(itemHeightPx: Int, edgeOffsetYPx: Float) -> Unit)? =
-            remember {
+            remember(isSystemInDarkTheme()) {
                 { itemHeightPx, edgeOffsetYPx ->
                     if (overlayStyle == JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE) {
                         drawPickerRectOverlay(

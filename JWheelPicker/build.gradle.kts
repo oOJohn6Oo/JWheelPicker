@@ -9,7 +9,7 @@ apply(from = "publish.gradle")
 
 android {
     namespace = "io.john6.base.compose.jwheelpicker"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
@@ -39,8 +39,8 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.material:material:1.7.4")
-    implementation("androidx.fragment:fragment-ktx:1.8.4")
+    implementation("androidx.compose.material:material:1.8.0")
+    implementation("androidx.fragment:fragment-ktx:1.8.6")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
 }

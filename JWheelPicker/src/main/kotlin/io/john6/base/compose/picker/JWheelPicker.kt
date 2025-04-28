@@ -1,7 +1,6 @@
 package io.john6.base.compose.picker
 
 import android.view.HapticFeedbackConstants
-import androidx.annotation.FloatRange
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -65,9 +64,18 @@ enum class JWheelPickerArrangement {
 /**
  * iOS style data picker
  *
- * @param enableHapticFeedback 是否启用震动
- * @param hapticFeedBackThreshold  在可震动 OffsetX/Y 范围
- * @param itemTextList item 文字列表
+ * @param modifier [Modifier] will be applied to the outside Widget
+ * @param arrangement Either [JWheelPickerArrangement.Horizontal] or [JWheelPickerArrangement.Vertical]
+ * @param size Picker's height or width, depend on [arrangement]
+ * @param itemWidthDp Width of an Item, only used when [arrangement] is [JWheelPickerArrangement.Horizontal]
+ * @param itemPadding Will applied to vertical of each item, only available in [JWheelPickerArrangement.Vertical]
+ * @param selectedTextColor Text color when item is selected
+ * @param enableHapticFeedback Vibrate when scroll, using [android.view.View.performHapticFeedback]
+ * @param textStyle Text style of each Item
+ * @param confirmSelectDistanceThreshold  item will be selected while item centerY in [picker center - this , picker center + this]
+ * @param itemTextList List of [JWheelPickerItemInfo] that will be use to show in this Picker
+ * @param initialIndex initial selected index
+ * @param drawOverLay The overlay of this Picker, there are 2 preset style, [JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE] and [JWheelPickerHelper.OVERLAY_STYLE_LINE]
  */
 @Composable
 fun JWheelPicker(
@@ -79,7 +87,7 @@ fun JWheelPicker(
     selectedTextColor: Color = Color.Unspecified,
     enableHapticFeedback: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
-    hapticFeedBackThreshold: Float = 20f,
+    confirmSelectDistanceThreshold: Float = 20f,
     itemTextList: List<JWheelPickerItemInfo>,
     initialIndex: Int = 0,
     drawOverLay: (ContentDrawScope.(itemHeightPx: Int, edgeOffsetYPx: Float) -> Unit)? = { itemHeightPx, edgeOffsetYPx ->
@@ -96,7 +104,7 @@ fun JWheelPicker(
         selectedTextColor = selectedTextColor,
         enableHapticFeedback = enableHapticFeedback,
         textStyle = textStyle,
-        confirmSelectDistanceThreshold = hapticFeedBackThreshold,
+        confirmSelectDistanceThreshold = confirmSelectDistanceThreshold,
         itemCount = itemTextList.size,
         itemData = { itemTextList[it] },
         initialIndex = initialIndex,
@@ -108,11 +116,19 @@ fun JWheelPicker(
 /**
  * iOS style data picker
  *
- * @param enableHapticFeedback vibrate using [android.view.View.performHapticFeedback]
+ * @param modifier [Modifier] will be applied to the outside Widget
+ * @param arrangement Either [JWheelPickerArrangement.Horizontal] or [JWheelPickerArrangement.Vertical]
+ * @param size Picker's height or width, depend on [arrangement]
+ * @param itemWidthDp Width of an Item, only used when [arrangement] is [JWheelPickerArrangement.Horizontal]
+ * @param itemPadding Will applied to vertical of each item, only available in [JWheelPickerArrangement.Vertical]
+ * @param selectedTextColor Text color when item is selected
+ * @param enableHapticFeedback Vibrate when scroll, using [android.view.View.performHapticFeedback]
+ * @param textStyle Text style of each Item
  * @param confirmSelectDistanceThreshold  item will be selected while item centerY in [picker center - this , picker center + this]
- * @param itemCount 可滚动的 Item 数量
+ * @param itemCount total count of this Picker
  * @param itemData a function which take a index param return a [JWheelPickerItemInfo]
- *
+ * @param initialIndex initial selected index
+ * @param drawOverLay The overlay of this Picker, there are 2 preset style, [JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE] and [JWheelPickerHelper.OVERLAY_STYLE_LINE]
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -145,12 +161,12 @@ fun JWheelPicker(
     val isDragged = lazyListState.interactionSource.collectIsDraggedAsState().value
     val isScrolling = lazyListState.isScrollInProgress
 
-    // Item 高度
+    // Calculate Item's height
     val fontSize = textStyle.fontSize.takeIf { it != TextUnit.Unspecified } ?: 14.sp
     val itemHeightPx by remember(fontSize, itemPadding) {
         mutableIntStateOf(with(density) { (fontSize.toPx() + (itemPadding * 2).toPx()).roundToInt() })
     }
-    // 边缘 Item 移动到中心需要的偏移量
+    // Calculate the amount of PX, for edge Item scroll to Widget's center
     val edgeOffsetPx = remember(size, itemHeightPx, itemWidthDp) {
         when (arrangement) {
             JWheelPickerArrangement.Vertical ->
