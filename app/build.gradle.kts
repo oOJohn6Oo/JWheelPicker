@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -6,18 +8,18 @@ plugins {
 
 android {
     namespace = "io.john6.demo.wheelpicker"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "io.john6.demo.wheelpicker"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        resourceConfigurations += setOf("zh", "en")
+        androidResources.localeFilters.addAll(setOf("zh", "en"))
     }
 
     buildTypes {
@@ -45,6 +47,7 @@ android {
 
 dependencies {
     implementation(project(":JWheelPicker"))
-    implementation("androidx.compose.material:material:1.7.4")
-    implementation("androidx.fragment:fragment-ktx:1.8.4")
+    implementation("androidx.compose.material:material:1.8.0")
+    implementation("androidx.fragment:fragment-ktx:1.8.6")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.7")
 }

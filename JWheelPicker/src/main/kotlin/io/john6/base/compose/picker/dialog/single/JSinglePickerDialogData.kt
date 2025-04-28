@@ -1,5 +1,7 @@
 package io.john6.base.compose.picker.dialog.single
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import io.john6.base.compose.picker.JPickerOverlayStyle
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.base.compose.picker.dialog.JPickerDialogBaseData
@@ -18,7 +20,8 @@ data class JSinglePickerDialogData(
     override val title: Pair<Int, String> = 0 to "",
     @JPickerOverlayStyle
     override val overlayStyle: Int = 0,
-    override val selectTextColorResId: Int = 0,
+    override val selectTextColor: @Composable () -> Color,
+    override val isDraggable: Boolean = true,
     val initialIndex: Int = 0,
     val dataList: List<JWheelPickerItemInfo> = emptyList(),
 ) : JPickerDialogBaseData() {

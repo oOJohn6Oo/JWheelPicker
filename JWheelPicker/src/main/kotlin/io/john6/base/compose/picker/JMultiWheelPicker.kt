@@ -27,13 +27,21 @@ import kotlin.math.roundToInt
 
 
 /**
- * 多滚轮选择器
+ * Multiple WheelPicker
  *
- * @param enableHapticFeedback 是否启用震动
- * @param hapticFeedBackYThreshold  震动范围
- * @param wheelCount 所需滚轮数量
- * @param key 当前滚轮数据的 key，仅当 key 改变时才会刷新数据
- * @param generateJWheelPickerInfo 生成滚轮数据的方法
+ * @param modifier [Modifier] will be applied to the outside Widget
+ * @param height Height of this Widget and it's child WheelPicker
+ * @param itemVerticalPadding Will applied to vertical of each item, only available in [JWheelPickerArrangement.Vertical]
+ * @param containerHorizontalPadding Will applied to horizontal of this Widget
+ * @param enableHapticFeedback Vibrate when scroll, using [android.view.View.performHapticFeedback]
+ * @param textStyle Text style of each Item
+ * @param selectedTextColor Text color when item is selected
+ * @param hapticFeedbackYThreshold  item will be selected while item centerY in [picker center - this , picker center + this]
+ * @param wheelCount Total picker count inside this Widget
+ * @param drawOverLay The overlay of this Picker, there are 2 preset style, [JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE] and [JWheelPickerHelper.OVERLAY_STYLE_LINE]
+ * @param generateJWheelPickerInfo The method to generate picker data
+ * @param key Used to refresh the whole Picker data
+ * @param onSelectedItemChanged The method will be called when item is selected
  */
 @Composable
 fun JMultiWheelPicker(
@@ -44,7 +52,7 @@ fun JMultiWheelPicker(
     enableHapticFeedback: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
     selectedTextColor: Color = Color.Unspecified,
-    hapticFeedBackYThreshold: Float = 20f,
+    hapticFeedbackYThreshold: Float = 20f,
     wheelCount: Int,
     drawOverLay: (ContentDrawScope.(itemHeightPx: Int, edgeOffsetYPx: Float) -> Unit)? = { itemHeightPx, edgeOffsetYPx ->
         drawPickerLineOverlay(edgeOffsetYPx = edgeOffsetYPx, itemHeightPx = itemHeightPx)
@@ -76,7 +84,7 @@ fun JMultiWheelPicker(
                 enableHapticFeedback = enableHapticFeedback,
                 selectedTextColor = selectedTextColor,
                 textStyle = textStyle,
-                confirmSelectYThreshold = hapticFeedBackYThreshold,
+                confirmSelectYThreshold = hapticFeedbackYThreshold,
                 onSelectedItemChanged = onSelectedItemChanged,
                 generatePickerData = generateJWheelPickerInfo,
                 key = key,
@@ -86,11 +94,17 @@ fun JMultiWheelPicker(
 }
 
 /**
- * 多滚轮中的每个单项
+ * Single WheelPicker
  *
- * @param key 当前滚轮数据的 key，仅当 key 改变时才会刷新数据
- * @param generatePickerData 生成滚轮数据的方法
- * @param onSelectedItemChanged 选中项改变时的回调 滚轮信息, 选中项下标, 选中项数据
+ * @param wheelIndex Current index of the wheel
+ * @param itemVerticalPadding Will applied to vertical of each item, only available in [JWheelPickerArrangement.Vertical]
+ * @param enableHapticFeedback Vibrate when scroll, using [android.view.View.performHapticFeedback]
+ * @param textStyle Text style of each Item
+ * @param confirmSelectYThreshold  item will be selected while item centerY in [picker center - this , picker center + this]
+ * @param selectedTextColor Text color when item is selected
+ * @param key Used to refresh the whole Picker data
+ * @param onSelectedItemChanged The method will be called when item is selected
+ * @param generatePickerData The method to generate picker data
  */
 @Composable
 private fun RowScope.ItemWheelPicker(
