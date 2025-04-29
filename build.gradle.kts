@@ -8,4 +8,5 @@ plugins {
     id("org.jetbrains.kotlin.android") version kotlinVersion apply false
     id("org.jetbrains.kotlin.jvm") version kotlinVersion apply false
     id("org.jetbrains.kotlin.plugin.compose") version kotlinVersion apply false
+    id("com.vanniktech.maven.publish") version("0.31.0") apply false
 }

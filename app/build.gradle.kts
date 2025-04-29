@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -47,7 +45,7 @@ android {
 
 dependencies {
     implementation(project(":JWheelPicker"))
+//    implementation("io.github.oojohn6oo:jwheelpicker:1.3.4")
     implementation("androidx.compose.material:material:1.8.0")
     implementation("androidx.fragment:fragment-ktx:1.8.6")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.7")
 }

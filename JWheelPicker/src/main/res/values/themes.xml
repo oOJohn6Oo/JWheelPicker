@@ -1,6 +1,6 @@
 <resources xmlns:ns1="http://schemas.android.com/tools">
 
-    <style name="JPickerDialogTheme" parent="@style/Theme.AppCompat.Light.Dialog">
+    <style name="JPickerDialogTheme" parent="@style/Theme.MaterialComponents.Dialog">
         <item name="android:windowAnimationStyle">@style/JPickerDialogWindowAnimation</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
