@@ -45,7 +45,7 @@ android {
 
 dependencies {
     implementation(project(":JWheelPicker"))
-//    implementation("io.github.oojohn6oo:jwheelpicker:1.3.4")
-    implementation("androidx.compose.material:material:1.8.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.6")
+//    implementation("io.github.oojohn6oo:jwheelpicker:1.3.6")
+    implementation("androidx.compose.material:material:1.8.2")
+    implementation("androidx.fragment:fragment-ktx:1.8.7")
 }
