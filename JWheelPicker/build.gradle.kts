@@ -40,14 +40,15 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.material:material:1.8.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.6")
+    implementation("androidx.compose.material:material:1.8.2")
+    implementation("androidx.fragment:fragment-ktx:1.8.7")
+    implementation("androidx.compose.foundation:foundation:1.8.2")
     implementation("com.google.android.material:material:1.12.0")
 }
 
 
 mavenPublishing {
-    coordinates("io.github.oojohn6oo", "jwheelpicker", "1.3.5")
+    coordinates("io.github.oojohn6oo", "jwheelpicker", "1.3.6")
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
     pom {

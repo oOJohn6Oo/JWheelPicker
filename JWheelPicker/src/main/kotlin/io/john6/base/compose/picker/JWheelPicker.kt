@@ -2,7 +2,7 @@ package io.john6.base.compose.picker
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -244,7 +244,7 @@ fun JWheelPicker(
     }
 
     CompositionLocalProvider(
-        LocalOverscrollConfiguration provides null
+        LocalOverscrollFactory provides null
     ) {
         when (arrangement) {
             JWheelPickerArrangement.Vertical -> LazyColumn(
@@ -256,7 +256,6 @@ fun JWheelPicker(
                         drawOverLay?.invoke(this, itemHeightPx, edgeOffsetPx)
                     },
                 state = lazyListState,
-//                flingBehavior = rememberJMaxScrollFlingBehavior(4000f),
                 contentPadding = PaddingValues(vertical = edgeOffsetDp),
             ) {
                 items(itemCount, key = { itemData(it) }) {
@@ -279,7 +278,6 @@ fun JWheelPicker(
                         drawOverLay?.invoke(this, itemHeightPx, edgeOffsetPx)
                     },
                 state = lazyListState,
-//                flingBehavior = rememberJMaxScrollFlingBehavior(4000f),
                 contentPadding = PaddingValues(horizontal = edgeOffsetDp),
             ) {
                 items(itemCount, key = { itemData(it) }) {
