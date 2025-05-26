@@ -13,19 +13,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
+import io.john6.base.compose.jwheelpicker.R
 import io.john6.base.compose.picker.JWheelPicker
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
 import io.john6.base.compose.picker.bean.JWheelPickerItemInfo
 import io.john6.base.compose.picker.dialog.JBasePickerDialogFragment
-import io.john6.base.compose.jwheelpicker.R
 import onlyBottomSafeDrawing
 
 /**
@@ -74,7 +74,7 @@ import onlyBottomSafeDrawing
  */
 open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
 
-    private lateinit var mViewModel: JSinglePickerViewModel
+    protected lateinit var mViewModel: JSinglePickerViewModel
 
     override fun getTheme() = R.style.JPickerDialogTheme
 
@@ -101,8 +101,10 @@ open class JSinglePickerDialogFragment : JBasePickerDialogFragment() {
         Column(modifier = Modifier.onlyBottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
+                confirmImgVector = null,
                 confirmImgPainter = painterResource(R.drawable.ic_done_24dp_from_j_picker),
-                onSubmit = this@JSinglePickerDialogFragment::onSubmit
+                onSubmit = this@JSinglePickerDialogFragment::onSubmit,
+                confirmText = stringResource(android.R.string.ok),
             )
 
             val data = mViewModel.requiredData

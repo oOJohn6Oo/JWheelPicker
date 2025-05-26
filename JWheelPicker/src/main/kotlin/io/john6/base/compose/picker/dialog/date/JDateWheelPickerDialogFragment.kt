@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
@@ -56,7 +57,7 @@ import java.time.LocalDateTime
  */
 @RequiresApi(Build.VERSION_CODES.O)
 open class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
-    private lateinit var mViewModel: JDateWheelPickerViewModel
+    protected lateinit var mViewModel: JDateWheelPickerViewModel
     private var disableTouch = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,8 +82,10 @@ open class JDateWheelPickerDialogFragment : JBasePickerDialogFragment() {
         Column(modifier = Modifier.onlyBottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
+                confirmImgVector = null,
                 confirmImgPainter = painterResource(R.drawable.ic_done_24dp_from_j_picker),
-                onSubmit = this@JDateWheelPickerDialogFragment::onSubmit
+                onSubmit = this@JDateWheelPickerDialogFragment::onSubmit,
+                confirmText = stringResource(android.R.string.ok),
             )
 
             DatePicker(

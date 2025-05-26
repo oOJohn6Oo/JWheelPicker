@@ -46,6 +46,17 @@ And using FragmentResult API to get the callback
 
 https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e699d58d3/app/src/main/kotlin/io/john6/demo/wheelpicker/JWheelPickerDemoActivity.kt#L77-L84
 
+
+#### Common Q&A
+
+##### How can I customize the header of Picker Dialog
+Just override the `ColumnScope.DefaultPickerHeader` function, like [CustomTitleSinglePickerDialogFragment].
+
+#### How to disable the swipe-to-dismiss feature of the preset Picker Dialog?
+When passing data like [JDatePickerDialogData], set the `isDraggable` to false.
+
+
+
 [LatestVersion]: https://badgen.net/maven/v/maven-central/io.github.oojohn6oo/jwheelpicker
 [JWheelPicker]: ./JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/JWheelPicker.kt
 [JMultiWheelPicker]: ./JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/JMultiWheelPicker.kt
@@ -58,4 +69,5 @@ https://github.com/oOJohn6Oo/JWheelPicker/blob/91aae0b0f9344d1e870e66368ad6771e6
 [JDateWheelPickerDialogFragment]: ./JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/multiple/JDateWheelPickerDialogFragment.kt
 [JDatePickerDialogData]: ./JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/multiple/JDatePickerDialogData.kt
 [IJPickerAdapter]: ./JWheelPicker/src/main/kotlin/io/john6/base/compose/picker/dialog/IJPickerAdapter.kt
+[CustomTitleSinglePickerDialogFragment]: ./app/src/main/kotlin/io/john6/demo/wheelpicker/CustomTitleSinglePickerDialogFragment.kt
 [The latest release]: https://github.com/oOJohn6Oo/JWheelPicker/releases/latest

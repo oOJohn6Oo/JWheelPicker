@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
@@ -56,7 +57,7 @@ import onlyBottomSafeDrawing
  * ```
  */
 class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
-    private lateinit var mViewModel: JMultiplePickerViewModel
+    protected lateinit var mViewModel: JMultiplePickerViewModel
     private var disableTouch = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,8 +82,10 @@ class JMultiplePickerDialogFragment : JBasePickerDialogFragment() {
         Column(modifier = Modifier.onlyBottomSafeDrawing()) {
             DefaultPickerHeader(
                 title = getDialogTitle(title = mViewModel.requiredData.title),
+                confirmImgVector = null,
                 confirmImgPainter = painterResource(R.drawable.ic_done_24dp_from_j_picker),
-                onSubmit = this@JMultiplePickerDialogFragment::onSubmit
+                onSubmit = this@JMultiplePickerDialogFragment::onSubmit,
+                confirmText = stringResource(android.R.string.ok),
             )
 
             MultiplePicker(
