@@ -13,6 +13,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -164,11 +165,11 @@ abstract class JBasePickerDialogFragment : DialogFragment() {
      * @param confirmText took the right side slot, 3 priority, never null, will be the description of the icon
      */
     @Composable
-    internal fun DefaultPickerHeader(
+    open fun ColumnScope.DefaultPickerHeader(
         title: String,
-        confirmImgVector: ImageVector? = null,
-        confirmImgPainter: Painter? = null,
-        confirmText: String = stringResource(android.R.string.ok),
+        confirmImgVector: ImageVector?,
+        confirmImgPainter: Painter?,
+        confirmText: String,
         onSubmit: () -> Unit
     ) {
         Box(

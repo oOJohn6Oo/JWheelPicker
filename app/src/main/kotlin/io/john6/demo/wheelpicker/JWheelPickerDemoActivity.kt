@@ -3,8 +3,19 @@ package io.john6.demo.wheelpicker
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.FragmentActivity
 import io.john6.base.compose.picker.JWheelPickerHelper
 import io.john6.base.compose.picker.JWheelPickerHelper.fragmentResultKey
@@ -89,17 +100,18 @@ class JWheelPickerDemoActivity : FragmentActivity() {
                 ),
             )
         } else {
-            JSinglePickerDialogFragment.show(
-                supportFragmentManager,
-                requiredData = JSinglePickerDialogData(
+            val fg = CustomTitleSinglePickerDialogFragment()
+            fg.arguments = Bundle().apply {
+                putParcelable("data", JSinglePickerDialogData(
                     title = 0 to "SinglePicker",
                     selectTextColor = { MaterialTheme.colors.primary },
                     isDraggable = false,
                     initialIndex = 20,
                     dataList = (0..30).map { JWheelPickerItemInfo(it.toString(), it, "item$it") },
                     overlayStyle = JWheelPickerHelper.OVERLAY_STYLE_RECTANGLE
-                ),
-            )
+                ))
+            }
+            fg.show(supportFragmentManager, JSinglePickerDialogFragment.TAG)
         }
     }
 
