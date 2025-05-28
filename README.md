@@ -15,7 +15,7 @@
 
 #### Implementation
 - latest version ![LatestVersion]
-- add `implementation("com.github.ooJohn6oo:jwheelpicker:<version>")`
+- add `implementation("io.github.oojohn6oo:jwheelpicker:<version>")`
 
 #### Summary
 * Single wheel picker ==> use [JSinglePickerDialogFragment] + [JSinglePickerDialogData] or [JSinglePickerDialogAdapterData]
