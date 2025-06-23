@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "JWheelPickerDemo"
 include(":app")
-include(":JWheelPicker")

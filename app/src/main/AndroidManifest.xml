@@ -14,7 +14,7 @@
         tools:targetApi="tiramisu">
         <activity
             android:configChanges="screenLayout|screenSize|orientation|keyboardHidden|keyboard|navigation|uiMode"
-            android:name=".JWheelPickerDemoActivity"
+            android:name=".DemoActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
